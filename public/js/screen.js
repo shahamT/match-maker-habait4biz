@@ -353,7 +353,14 @@
     const pct2 = tot ? Math.round((v2 / tot) * 100) : 0;
     const pctN = tot ? 100 - pct5 - pct2 : 0;
     const avg = tot ? (v5 * 5 + v2 * 2 - vn * 2) / tot : 0;
+    // Vote progress: how many of the pairs that may vote have voted, so the host knows
+    // at a glance whether it is safe to move on.
+    const eligible = j.eligibleVoters || 0;
+    const allIn = eligible > 0 && tot >= eligible;
     setText('[data-bind="votes-total"]', String(tot));
+    setText('[data-bind="votes-eligible"]', String(eligible));
+    setText('[data-bind="votes-label"]', allIn ? 'כולם הצביעו ✓' : 'צמדים הצביעו');
+    $('[data-bind="votes-progress"]').classList.toggle('done', allIn);
     setText('[data-bind="weighted"]', (avg >= 0 ? '+' : '') + avg.toFixed(1));
     $('[data-meter="5"]').style.width = `${pct5}%`;
     $('[data-meter="2"]').style.width = `${pct2}%`;

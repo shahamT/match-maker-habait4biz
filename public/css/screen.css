@@ -226,17 +226,27 @@ body {
 .judge-bottom { width: 1360px; display: flex; flex-direction: column; gap: 22px; }
 .judge-stats { display: flex; align-items: center; justify-content: space-between; }
 .judge-stats-right { display: flex; align-items: center; gap: 22px; }
-.votes-total { font-size: 30px; font-weight: 800; color: #C7ABD4; }
+/* Vote progress chip (added): the judge-index pill language, gold once every pair has voted. */
+.votes-progress {
+  display: flex; align-items: baseline; gap: 14px; padding: 10px 26px; border-radius: 999px;
+  background: rgba(112,46,145,0.45); border: 1px solid rgba(168,85,214,0.6); transition: all .3s;
+}
+.votes-count { font-size: 40px; line-height: 1; font-weight: 900; color: #fff; font-variant-numeric: tabular-nums; }
+.votes-label { font-size: 24px; font-weight: 800; color: #C7ABD4; white-space: nowrap; }
+.votes-progress.done { background: rgba(252,214,17,0.12); border-color: #FCD611; box-shadow: 0 0 30px rgba(252,214,17,0.35); }
+.votes-progress.done .votes-count { color: #FCD611; }
+.votes-progress.done .votes-label { color: #FCD611; }
+/* Primary judging action, at the prototype's big yellow CTA size (the ended overlay's button). */
 .next-btn {
-  height: 64px; padding: 0 30px; border-radius: 20px; border: 1px solid #FCD611; background: #FCD611; color: #3A2508; font-size: 24px; font-weight: 900;
-  cursor: pointer; box-shadow: 0 0 30px rgba(252,214,17,0.45);
+  height: 96px; padding: 0 64px; border-radius: 28px; border: 1px solid #FCD611; background: #FCD611; color: #3A2508; font-size: 36px; font-weight: 900;
+  cursor: pointer; box-shadow: 0 0 44px rgba(252,214,17,0.5);
 }
 .next-btn:active { transform: scale(.98); }
 /* Added: end the judging phase early, leaving the remaining matches unranked. Secondary to
    #btn-next — the live bar's purple button colours at the next-btn's geometry. */
 .finish-judging-btn {
-  height: 64px; padding: 0 30px; border-radius: 20px; border: 1px solid rgba(168,85,214,0.8); background: rgba(112,46,145,0.5); color: #fff;
-  font-size: 24px; font-weight: 800; cursor: pointer; box-shadow: 0 0 22px rgba(168,85,214,0.4);
+  height: 52px; padding: 0 22px; border-radius: 16px; border: 1px solid rgba(168,85,214,0.8); background: rgba(112,46,145,0.5); color: #fff;
+  font-size: 20px; font-weight: 800; cursor: pointer; box-shadow: 0 0 22px rgba(168,85,214,0.4);
 }
 .finish-judging-btn:active { transform: scale(.98); }
 .weighted-wrap { display: flex; align-items: baseline; gap: 14px; }
@@ -274,7 +284,9 @@ body {
 .crown { font-size: 34px; }
 .pod-name { font-size: 40px; font-weight: 900; text-align: center; line-height: 1.1; }
 .pod-name-1 { font-size: 48px; text-shadow: 0 0 20px rgba(252,214,17,0.5); }
-.pod-score { font-size: 34px; font-weight: 800; color: #C7ABD4; }
+/* The block cap is translated up 28px, more than the 18px column gap, so the score needs
+   extra clearance underneath or the cap rides over the number. */
+.pod-score { font-size: 34px; font-weight: 800; color: #C7ABD4; margin-bottom: 22px; }
 .pod-score-1 { font-size: 40px; font-weight: 900; color: #FCD611; }
 .block { position: relative; }
 .block-2, .block-3 { width: 260px; }

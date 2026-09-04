@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#1F1130">
   <title>שת"פ נולד · מסך ההקרנה</title>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="icon" type="image/png" sizes="512x512" href="/assets/apple-touch-icon.png">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -103,7 +102,10 @@
         <div class="judge-bottom">
           <div class="judge-stats">
             <div class="judge-stats-right">
-              <div class="votes-total"><span dir="ltr" data-bind="votes-total">0</span> הצבעות נקלטו</div>
+              <div class="votes-progress" data-bind="votes-progress">
+                <span dir="ltr" class="votes-count"><span data-bind="votes-total">0</span> / <span data-bind="votes-eligible">0</span></span>
+                <span class="votes-label" data-bind="votes-label">צמדים הצביעו</span>
+              </div>
               <button type="button" id="btn-next" class="next-btn">⏭️ לשידוך הבא</button>
               <button type="button" id="btn-finish-judging" class="finish-judging-btn" hidden>⏹ סיום השיפוט</button>
             </div>

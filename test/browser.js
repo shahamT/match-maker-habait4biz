@@ -209,9 +209,11 @@ function cleanup() {
 
   // ---------------------------------------------------------------------------
   console.log('splash → onboarding');
-  await player.goto(BASE + '/');
+  // The splash hides itself 2 s after first paint, so start polling at navigation rather than
+  // after the load event (which also waits on the Google Fonts request).
+  await player.send('Page.navigate', { url: BASE + '/' });
+  check('player splash overlay visible on load', await player.waitFor(visible('[data-overlay="splash"]'), 5000));
   await screen.goto(BASE + '/screen');
-  check('player splash overlay visible on load', await player.waitFor(visible('[data-overlay="splash"]'), 3000));
   await player.shot('00-player-splash');
   check('player shows onboarding after splash', await player.waitFor(screenIs('onboarding')));
   check('splash gone after ~2.1 s', await player.waitFor(notVisible('[data-overlay="splash"]')));
