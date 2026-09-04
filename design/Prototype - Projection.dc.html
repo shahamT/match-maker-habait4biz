@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#1F1130;overflow-x:hidden;}
+a{color:#C7ABD4;} a:hover{color:#FCD611;}
+button{font-family:Rubik,Heebo,sans-serif;white-space:nowrap;}
+@keyframes popIn{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+@keyframes floatUp{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-70px);opacity:0}}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes confetti{0%{transform:translateY(-120px) rotate(0deg);opacity:1}100%{transform:translateY(1200px) rotate(720deg);opacity:.9}}
+@keyframes countPop{0%{transform:scale(.4);opacity:0}25%{transform:scale(1.05);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(1.35);opacity:0}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+</style>
+</helmet>
+<div dir="rtl" style="min-height:100vh;padding:24px 24px 48px;font-family:Rubik,Heebo,sans-serif;color:#fff;background:#1F1130;display:flex;flex-direction:column;align-items:center;gap:20px;">
+
+  <div style="width:100%;display:flex;justify-content:center;height:{{ stageH }};position:relative;">
+  <div style="width:1920px;height:1080px;position:absolute;top:0;transform:scale({{ scale }});transform-origin:top center;overflow:hidden;border-radius:24px;background:radial-gradient(120% 70% at 50% -10%,#6E3899 0%,#41205F 55%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.6);">
+    <img src="assets/logo.png" alt="" style="position:absolute;top:44px;left:56px;height:54px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.9;z-index:3;">
+
+    <!-- SETUP (admin) -->
+    <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;animation:fadeIn .5s ease-out;">
+      <div style="text-align:center;display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:72px;line-height:1;font-weight:900;text-shadow:0 0 10px #A855D6,0 0 34px #A855D6,0 0 80px #702E91;">מחולל השתפ"ים</div>
+        <div style="font-size:26px;font-weight:700;color:#C7ABD4;">של הבית לעסקים גליל מזרחי</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:26px;background:rgba(77,42,109,0.55);border:1px solid rgba(199,171,212,0.3);border-radius:40px;padding:48px 72px;">
+        <div style="font-size:34px;font-weight:800;color:#C7ABD4;">הגדרות המשחק · משך הסבב</div>
+        <div style="display:flex;align-items:center;gap:36px;" dir="ltr">
+          <button onClick="{{ minusMin }}" style="width:96px;height:96px;border-radius:50%;border:2px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:56px;font-weight:900;cursor:pointer;line-height:1;" style-active="transform:scale(.95);">−</button>
+          <div dir="rtl" style="display:flex;align-items:baseline;gap:14px;min-width:260px;justify-content:center;"><span dir="ltr" style="font-size:150px;line-height:1;font-weight:900;color:#FCD611;text-shadow:0 0 30px rgba(252,214,17,0.5);">{{ minutes }}</span><span style="font-size:36px;font-weight:800;color:#C7ABD4;">דקות</span></div>
+          <button onClick="{{ plusMin }}" style="width:96px;height:96px;border-radius:50%;border:2px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:56px;font-weight:900;cursor:pointer;line-height:1;" style-active="transform:scale(.95);">+</button>
+        </div>
+        <button onClick="{{ openLobby }}" style="height:84px;padding:0 60px;border-radius:24px;border:1px solid #A855D6;background:linear-gradient(180deg,#8A3BB0,#702E91);color:#fff;font-size:32px;font-weight:900;cursor:pointer;box-shadow:0 0 34px rgba(168,85,214,0.55);" style-active="transform:scale(.98);">פתיחת הלובי 🚀</button>
+      </div>
+      <div style="font-size:20px;color:#C7ABD4;font-weight:700;">מסך למנחה בלבד — מוצג לפני פתיחת ההרשמה</div>
+    </div>
+    </sc-if>
+
+    <!-- LOBBY -->
+    <sc-if value="{{ isLobby }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:56px 96px 64px;animation:fadeIn .5s ease-out;">
+      <div style="text-align:center;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+        <div style="font-size:72px;line-height:1;font-weight:900;text-shadow:0 0 10px #A855D6,0 0 34px #A855D6,0 0 80px #702E91;">מחולל השתפ"ים</div>
+        <div style="font-size:26px;font-weight:700;color:#C7ABD4;">של הבית לעסקים גליל מזרחי</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:72px;margin-top:44px;">
+        <div style="width:360px;height:360px;border-radius:36px;background:#fff;border:14px solid #C7ABD4;box-shadow:0 0 0 6px rgba(199,171,212,0.25),0 0 80px rgba(168,85,214,0.55);display:grid;grid-template-columns:repeat(25,1fr);grid-template-rows:repeat(25,1fr);padding:18px;box-sizing:border-box;" dir="ltr">
+          <sc-for list="{{ qr }}" as="c" hint-placeholder-count="625"><div style="background:{{ c.bg }};border-radius:1px;"></div></sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px;max-width:640px;">
+          <div style="font-size:64px;line-height:1.15;font-weight:900;text-wrap:pretty;">סורקים, נרשמים בזוגות ומתחילים!</div>
+          <div style="display:flex;align-items:center;gap:14px;color:#FCD611;font-size:26px;font-weight:800;"><span style="display:inline-flex;gap:8px;" dir="ltr"><span style="width:12px;height:12px;border-radius:50%;background:#FCD611;animation:flash 1.2s infinite;"></span><span style="width:12px;height:12px;border-radius:50%;background:#FCD611;animation:flash 1.2s infinite .2s;"></span><span style="width:12px;height:12px;border-radius:50%;background:#FCD611;animation:flash 1.2s infinite .4s;"></span></span><span dir="ltr">{{ joinedCount }}</span> צמדים נרשמו</div>
+          <button onClick="{{ hostStart }}" disabled="{{ notLobby }}" style="align-self:flex-start;margin-top:10px;height:84px;padding:0 48px;border-radius:24px;border:1px solid #FCD611;background:#FCD611;color:#3A2508;font-size:32px;font-weight:900;cursor:pointer;box-shadow:0 0 40px rgba(252,214,17,0.5);opacity:{{ opLobby }};transition:opacity .3s;" style-active="transform:scale(.98);">🚀 הזנקת המשחק</button>
+        </div>
+      </div>
+      <div style="flex:1;"></div>
+      <div style="width:100%;display:grid;grid-template-columns:repeat(7,1fr);gap:16px;min-height:184px;align-content:end;">
+        <sc-for list="{{ lobbyTeams }}" as="t" hint-placeholder-count="0">
+          <div key="{{ t.name }}" style="height:84px;border-radius:20px;background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.3);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;text-align:center;padding:0 14px;box-shadow:0 10px 30px rgba(0,0,0,0.3);animation:popIn .5s cubic-bezier(.2,.9,.3,1.3) both;">{{ t.name }}</div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- LIVE BOARD (also behind countdown / ended) -->
+    <sc-if value="{{ isLive }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:44px 96px 48px;animation:fadeIn .5s ease-out;">
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:start;">
+        <div style="font-size:52px;font-weight:900;text-shadow:0 0 10px #A855D6,0 0 30px #A855D6;margin-top:70px;">מחולל השתפ"ים – סבב <span dir="ltr">{{ round }}</span></div>
+        <div style="position:relative;width:200px;height:200px;">
+          <svg width="200" height="200" viewBox="0 0 220 220" style="transform:rotate(-90deg) scaleY(-1);display:block;">
+            <circle cx="110" cy="110" r="98" style="fill:none;stroke:rgba(199,171,212,0.18);stroke-width:16;"></circle>
+            <circle cx="110" cy="110" r="98" style="fill:none;stroke:{{ timerColor }};stroke-width:16;stroke-linecap:round;stroke-dasharray:{{ bigDash }};filter:drop-shadow(0 0 14px {{ timerColor }});transition:stroke-dasharray 1s linear,stroke .4s;animation:{{ timerAnim }};"></circle>
+          </svg>
+          <div dir="ltr" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:58px;font-weight:900;letter-spacing:-1px;">{{ secs }}</div>
+        </div>
+        <div></div>
+      </div>
+      <div style="flex:1;position:relative;margin-top:22px;">
+        <sc-for list="{{ board }}" as="r" hint-placeholder-count="0">
+          <div key="{{ r.name }}" style="position:absolute;right:0;left:0;top:{{ r.top }};height:48px;display:grid;grid-template-columns:56px 300px 1fr 170px;align-items:center;gap:20px;transition:top .7s cubic-bezier(.2,.8,.2,1),transform .4s;transform:{{ r.lift }};">
+            <div dir="ltr" style="font-size:26px;font-weight:900;color:{{ r.rankColor }};text-align:center;">{{ r.rank }}</div>
+            <div style="font-size:27px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ r.name }}</div>
+            <div style="height:38px;border-radius:12px;background:rgba(199,171,212,0.1);position:relative;">
+              <div style="position:absolute;right:0;top:0;bottom:0;width:{{ r.width }};border-radius:12px;background:{{ r.barBg }};box-shadow:{{ r.barGlow }};transition:width .8s cubic-bezier(.2,.8,.2,1),background .3s;"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:14px;position:relative;">
+              <div dir="ltr" style="font-size:30px;font-weight:900;color:{{ r.scoreColor }};min-width:64px;text-align:left;transition:color .3s;">{{ r.score }}</div>
+              <sc-if value="{{ r.hasDelta }}" hint-placeholder-val="{{ false }}">
+                <div dir="ltr" key="{{ r.deltaId }}" style="font-size:38px;font-weight:900;color:{{ r.deltaColor }};text-shadow:0 0 20px {{ r.deltaColor }};animation:floatUp 1.5s ease-out forwards;">{{ r.delta }}</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;margin-top:18px;padding-top:18px;border-top:1px solid rgba(199,171,212,0.18);">
+        <button onClick="{{ addMinute }}" style="height:60px;padding:0 28px;border-radius:18px;border:1px solid rgba(168,85,214,0.8);background:rgba(112,46,145,0.5);color:#fff;font-size:22px;font-weight:800;cursor:pointer;box-shadow:0 0 22px rgba(168,85,214,0.4);display:flex;align-items:center;gap:12px;" style-active="transform:scale(.97);">⏳ הוסף דקה לסבב</button>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- COUNTDOWN -->
+    <sc-if value="{{ isCountdown }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:8;background:rgba(45,20,68,0.8);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;">
+      <div style="font-size:44px;font-weight:800;color:#C7ABD4;letter-spacing:3px;">מתחילים בעוד</div>
+      <div dir="{{ countDir }}" key="{{ countLabel }}" style="font-size:420px;line-height:1;font-weight:900;color:#FCD611;text-shadow:0 0 40px rgba(252,214,17,0.7),0 0 140px rgba(252,214,17,0.35);animation:countPop .9s ease-out;">{{ countLabel }}</div>
+    </div>
+    </sc-if>
+
+    <!-- ROUND ENDED -->
+    <sc-if value="{{ isEnded }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:8;background:rgba(45,20,68,0.72);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;animation:fadeIn .4s ease-out;">
+      <div style="position:relative;width:260px;height:260px;display:flex;align-items:center;justify-content:center;">
+        <div style="position:absolute;inset:0;border-radius:50%;border:3px solid rgba(252,214,17,0.6);box-shadow:0 0 50px rgba(252,214,17,0.35);animation:pulse 2.4s ease-in-out infinite;"></div>
+        <div style="font-size:110px;">⏱</div>
+      </div>
+      <div style="font-size:96px;font-weight:900;color:#FCD611;text-shadow:0 0 30px rgba(252,214,17,0.5);">הסבב הסתיים!</div>
+      <div style="font-size:40px;font-weight:700;color:#C7ABD4;">עוברים לשלב השיפוט — הצמדים מצביעים מהטלפונים</div>
+      <button onClick="{{ hostJudge }}" style="margin-top:10px;height:96px;padding:0 64px;border-radius:28px;border:1px solid #FCD611;background:#FCD611;color:#3A2508;font-size:36px;font-weight:900;cursor:pointer;box-shadow:0 0 44px rgba(252,214,17,0.5);" style-active="transform:scale(.98);">⏭️ עבור לשלב השיפוט</button>
+    </div>
+    </sc-if>
+
+    <!-- JUDGING -->
+    <sc-if value="{{ isJudge }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:52px 120px 64px;animation:fadeIn .5s ease-out;">
+      <div style="display:flex;align-items:center;gap:22px;white-space:nowrap;"><div style="font-size:40px;font-weight:800;color:#C7ABD4;">העריכו את השידוך המוצג על הלוח:</div><div dir="ltr" style="font-size:24px;font-weight:900;color:#fff;background:rgba(112,46,145,0.45);border:1px solid rgba(168,85,214,0.6);border-radius:999px;padding:6px 18px;">{{ judgeNum }}/{{ judgeTotal }}</div></div>
+      <div key="{{ judgeNum }}" style="margin-top:34px;width:1360px;background:linear-gradient(180deg,#532C74,#472465);border:2px solid rgba(199,171,212,0.35);border-radius:40px;padding:60px 64px;display:flex;flex-direction:column;gap:30px;box-shadow:0 0 0 8px rgba(112,46,145,0.25),0 0 90px rgba(168,85,214,0.45),0 30px 70px rgba(0,0,0,0.4);animation:popIn .5s ease-out;">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:36px;text-align:center;">
+          <div style="display:flex;flex-direction:column;gap:12px;"><div style="font-size:60px;line-height:1.1;font-weight:900;">{{ match.a }}</div><div style="font-size:28px;line-height:1.35;color:#C7ABD4;font-weight:500;">{{ match.descA }}</div></div>
+          <div style="width:110px;height:110px;border-radius:50%;background:#702E91;display:flex;align-items:center;justify-content:center;font-size:56px;box-shadow:0 0 40px rgba(168,85,214,0.7);">🤝</div>
+          <div style="display:flex;flex-direction:column;gap:12px;"><div style="font-size:60px;line-height:1.1;font-weight:900;">{{ match.b }}</div><div style="font-size:28px;line-height:1.35;color:#C7ABD4;font-weight:500;">{{ match.descB }}</div></div>
+        </div>
+        <div style="height:2px;background:rgba(199,171,212,0.25);"></div>
+        <div style="font-size:46px;line-height:1.5;text-align:center;color:#fff;text-wrap:pretty;">"{{ match.arg }}"</div>
+      </div>
+      <div style="flex:1;"></div>
+      <div style="width:1360px;display:flex;flex-direction:column;gap:22px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:22px;">
+            <div style="font-size:30px;font-weight:800;color:#C7ABD4;"><span dir="ltr">{{ votesTotal }}</span> הצבעות נקלטו</div>
+            <button onClick="{{ hostNextOrPodium }}" style="height:64px;padding:0 30px;border-radius:20px;border:1px solid #FCD611;background:#FCD611;color:#3A2508;font-size:24px;font-weight:900;cursor:pointer;box-shadow:0 0 30px rgba(252,214,17,0.45);" style-active="transform:scale(.98);">{{ nextLabel }}</button>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:14px;"><span style="font-size:30px;font-weight:800;color:#C7ABD4;">ציון משוקלל</span><span dir="ltr" style="font-size:64px;line-height:1;font-weight:900;color:#FCD611;text-shadow:0 0 20px rgba(252,214,17,0.5);">{{ weighted }}</span></div>
+        </div>
+        <div style="height:44px;border-radius:22px;background:rgba(199,171,212,0.12);display:flex;overflow:hidden;">
+          <div style="width:{{ pct5 }}%;background:#7BD7A8;transition:width .5s;"></div>
+          <div style="width:{{ pct2 }}%;background:#F0C177;transition:width .5s;"></div>
+          <div style="width:{{ pctN }}%;background:#E8899B;transition:width .5s;"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+          <div style="display:flex;align-items:center;gap:16px;background:rgba(123,215,168,0.12);border:2px solid #7BD7A8;border-radius:20px;padding:16px 24px;"><span style="font-size:40px;">💡</span><div style="display:flex;flex-direction:column;"><span style="font-size:28px;font-weight:900;">איזו הברקה!</span><span style="font-size:18px;color:#C7ABD4;font-weight:700;">(+5 נקודות)</span></div><span dir="ltr" style="margin-right:auto;font-size:44px;font-weight:900;color:#7BD7A8;">{{ pct5 }}%</span></div>
+          <div style="display:flex;align-items:center;gap:16px;background:rgba(240,193,119,0.12);border:2px solid #F0C177;border-radius:20px;padding:16px 24px;"><span style="font-size:40px;">👍</span><div style="display:flex;flex-direction:column;"><span style="font-size:28px;font-weight:900;">שווה לנסות</span><span style="font-size:18px;color:#C7ABD4;font-weight:700;">(+2 נקודות)</span></div><span dir="ltr" style="margin-right:auto;font-size:44px;font-weight:900;color:#F0C177;">{{ pct2 }}%</span></div>
+          <div style="display:flex;align-items:center;gap:16px;background:rgba(232,137,155,0.12);border:2px solid #E8899B;border-radius:20px;padding:16px 24px;"><span style="font-size:40px;">❌</span><div style="display:flex;flex-direction:column;"><span style="font-size:28px;font-weight:900;">לא להמציא!</span><span style="font-size:18px;color:#C7ABD4;font-weight:700;">(-2 נקודות)</span></div><span dir="ltr" style="margin-right:auto;font-size:44px;font-weight:900;color:#E8899B;">{{ pctN }}%</span></div>
+        </div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- PODIUM -->
+    <sc-if value="{{ isPodium }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;display:flex;padding:120px 96px 64px;gap:80px;align-items:stretch;animation:fadeIn .6s ease-out;">
+      <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+        <sc-for list="{{ confetti }}" as="p" hint-placeholder-count="0">
+          <div style="position:absolute;top:-40px;left:{{ p.left }};width:{{ p.w }};height:{{ p.h }};background:{{ p.bg }};border-radius:{{ p.r }};animation:confetti {{ p.dur }} linear infinite;animation-delay:{{ p.delay }};opacity:.95;"></div>
+        </sc-for>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative;">
+        <div style="font-size:64px;font-weight:900;color:#FCD611;text-shadow:0 0 14px rgba(252,214,17,0.6),0 0 50px rgba(252,214,17,0.3);margin-top:-40px;">המנצחים של הערב</div>
+        <div style="flex:1;"></div>
+        <div style="display:flex;align-items:flex-end;gap:24px;" dir="ltr">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:18px;animation:fadeIn .6s ease-out .6s both;">
+            <div style="font-size:40px;font-weight:900;text-align:center;line-height:1.1;">{{ p2.name }}</div>
+            <div dir="ltr" style="font-size:34px;font-weight:800;color:#C7ABD4;">{{ p2.score }}</div>
+            <div style="width:260px;height:230px;position:relative;">
+              <div style="position:absolute;left:0;right:0;top:0;height:34px;background:#C7ABD4;border-radius:14px 14px 0 0;transform:translateY(-28px) scaleY(.85);transform-origin:bottom;"></div>
+              <div style="position:absolute;left:0;right:0;top:4px;bottom:0;background:linear-gradient(180deg,#9C6FB8,#702E91);border-radius:6px 6px 16px 16px;display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:900;color:rgba(255,255,255,0.9);text-shadow:0 8px 0 rgba(0,0,0,0.25);">2</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:18px;animation:fadeIn .6s ease-out 1.2s both;">
+            <div style="font-size:34px;">👑</div>
+            <div style="font-size:48px;font-weight:900;text-align:center;line-height:1.1;text-shadow:0 0 20px rgba(252,214,17,0.5);">{{ p1.name }}</div>
+            <div dir="ltr" style="font-size:40px;font-weight:900;color:#FCD611;">{{ p1.score }}</div>
+            <div style="width:300px;height:330px;position:relative;">
+              <div style="position:absolute;left:0;right:0;top:0;height:34px;background:#FFF1A8;border-radius:14px 14px 0 0;transform:translateY(-28px) scaleY(.85);transform-origin:bottom;"></div>
+              <div style="position:absolute;left:0;right:0;top:4px;bottom:0;background:linear-gradient(180deg,#FCD611,#D9B400);border-radius:6px 6px 16px 16px;display:flex;align-items:center;justify-content:center;font-size:150px;font-weight:900;color:#3A2508;text-shadow:0 8px 0 rgba(0,0,0,0.15);box-shadow:0 0 80px rgba(252,214,17,0.5);">1</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:18px;animation:fadeIn .6s ease-out both;">
+            <div style="font-size:40px;font-weight:900;text-align:center;line-height:1.1;">{{ p3.name }}</div>
+            <div dir="ltr" style="font-size:34px;font-weight:800;color:#C7ABD4;">{{ p3.score }}</div>
+            <div style="width:260px;height:160px;position:relative;">
+              <div style="position:absolute;left:0;right:0;top:0;height:34px;background:#C7ABD4;border-radius:14px 14px 0 0;transform:translateY(-28px) scaleY(.85);transform-origin:bottom;"></div>
+              <div style="position:absolute;left:0;right:0;top:4px;bottom:0;background:linear-gradient(180deg,#8A5CA8,#5A2578);border-radius:6px 6px 16px 16px;display:flex;align-items:center;justify-content:center;font-size:110px;font-weight:900;color:rgba(255,255,255,0.9);text-shadow:0 8px 0 rgba(0,0,0,0.25);">3</div>
+            </div>
+          </div>
+        </div>
+        <div style="width:100%;height:22px;border-radius:0 0 20px 20px;background:linear-gradient(180deg,#2E1444,#1F0E2E);box-shadow:0 20px 50px rgba(0,0,0,0.5);"></div>
+      </div>
+      <div style="width:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;background:rgba(77,42,109,0.55);border:1px solid rgba(199,171,212,0.3);border-radius:40px;padding:44px 40px;position:relative;z-index:2;">
+        <div style="width:150px;height:150px;border-radius:50%;background:linear-gradient(180deg,#8A3BB0,#702E91);display:flex;align-items:center;justify-content:center;font-size:72px;box-shadow:0 0 50px rgba(168,85,214,0.6);">📄</div>
+        <div style="font-size:36px;line-height:1.4;font-weight:800;text-align:center;text-wrap:pretty;">קובץ הסיכום המלא של כל שיתופי הפעולה שנוצרו הערב זמין עכשיו להורדה בטלפון שלכם!</div>
+        <div style="height:1px;width:100%;background:rgba(199,171,212,0.25);"></div>
+        <button style="height:76px;padding:0 36px;border-radius:22px;border:1px solid #FCD611;background:#FCD611;color:#3A2508;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 0 34px rgba(252,214,17,0.45);display:flex;align-items:center;gap:14px;">📄 ייצא קובץ סיכום</button>
+        <div style="font-size:18px;color:#C7ABD4;font-weight:700;">למנחה בלבד</div>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+  </div>
+
+  <!-- Host simulation -->
+  <div style="width:100%;max-width:1100px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 18px;border-radius:16px;background:#2A1740;border:1px solid rgba(199,171,212,0.2);">
+    <div style="font-size:12px;letter-spacing:2px;color:#C7ABD4;font-weight:700;margin-left:6px;">סימולציית מנחה</div>
+    <button onClick="{{ hostStart }}" disabled="{{ notLobby }}" style="height:40px;padding:0 16px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ opLobby }};">הזנקת המשחק</button>
+    <button onClick="{{ addMinute }}" disabled="{{ notRunning }}" style="height:40px;padding:0 16px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ opRunning }};">⏳ הוסף דקה</button>
+    <button onClick="{{ hostEnd }}" disabled="{{ notRunning }}" style="height:40px;padding:0 16px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ opRunning }};">סיום הסבב</button>
+    <button onClick="{{ hostJudge }}" disabled="{{ notEnded }}" style="height:40px;padding:0 16px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ opEnded }};">מעבר לשלב השיפוט</button>
+    <button onClick="{{ hostNext }}" disabled="{{ notJudge }}" style="height:40px;padding:0 16px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ opJudge }};">השידוך הבא</button>
+    <button onClick="{{ hostPodium }}" disabled="{{ notJudge }}" style="height:40px;padding:0 16px;border-radius:12px;border:1px solid #FCD611;background:rgba(252,214,17,0.12);color:#FCD611;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ opJudge }};">פודיום</button>
+    <button onClick="{{ hostReset }}" style="height:40px;padding:0 16px;border-radius:12px;border:1px solid rgba(199,171,212,0.35);background:transparent;color:#C7ABD4;font-size:14px;font-weight:700;cursor:pointer;">איפוס</button>
+    <div style="margin-right:auto;font-size:13px;color:#C7ABD4;">שלב: {{ phaseLabel }}</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;roundSeconds&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:60,&quot;min&quot;:15,&quot;max&quot;:180,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;משחק&quot;}}">
+class Component extends DCLogic {
+  NAMES = ['צמד הגולן', 'שירה ועומר', 'נועה ויעל', 'הדבש והדגים', 'מירב ורון', 'צפת מתחברת', 'אבי ודנה', 'קייקים ויין', 'הצמד מהחולה', 'לי ותום', 'גינוסר', 'מיכל ואורי', 'ראש פינה', 'טל ואלון'];
+  DESC = {"מאפיית הגליל":"לחמי מחמצת ומאפים בטבריה","סטודיו נועה":"מיתוג ועיצוב לעסקים קטנים בראש פינה","חוות ריח הדבש":"דבש, פולן ומוצרי כוורת מהגולן","צימרים בכפר בלום":"אירוח כפרי לזוגות ומשפחות","קייקי הירדן":"שייט, אקסטרים וימי גיבוש","מסעדת הדגים בגינוסר":"דגי כנרת ואוכל גלילי","סטודיו ליוגה בצפת":"שיעורים, ריטריטים וסדנאות","משתלת עמק החולה":"צמחים, עציצים וייעוץ גינון"};
+  MATCHES = [
+    { a: 'חוות ריח הדבש', b: 'צימרים בכפר בלום', arg: "מארז דבש מקומי בכל חדר בצ'ק-אין, עם קוד הנחה לביקור בחווה למחרת בבוקר", team: 1 },
+    { a: 'קייקי הירדן', b: 'מסעדת הדגים בגינוסר', arg: 'חבילת יום: שייט בבוקר וארוחת דגים בצהריים במחיר משולב', team: 7 },
+    { a: 'סטודיו ליוגה בצפת', b: 'משתלת עמק החולה', arg: 'ריטריט יוגה בין הצמחים במשתלה, וכל משתתף מקבל עציץ הביתה', team: 5 },
+    { a: 'מאפיית הגליל', b: 'סטודיו נועה', arg: 'שניהם עובדים עם עסקים קטנים בגליל – אפשר לארוז מיתוג + מארזי מאפים לאירועים', team: 0 }
+  ];
+  state = { phase: 'setup', minutes: 1, total: 60, joined: 0, teams: [], secs: this.R, count: 3, round: 1, judgeIdx: 0, votes: { v5: 0, v2: 0, vn: 0 }, scale: 0.6, stageH: 648 };
+  timers = [];
+  get R() { return this.state.minutes * 60; }
+  componentDidMount() {
+    this.onResize = () => { const w = Math.min(window.innerWidth - 48, 1920); const sc = w / 1920; this.setState({ scale: sc, stageH: Math.round(1080 * sc) }); };
+    this.onResize(); window.addEventListener('resize', this.onResize);
+    this.tick = setInterval(() => {
+      const s = this.state;
+      if (s.phase === 'live') {
+        if (s.secs <= 1) { this.setState({ secs: 0, phase: 'ended' }); return; }
+        this.setState({ secs: s.secs - 1 });
+      }
+    }, 1000);
+    this.scoreLoop = setInterval(() => {
+      const s = this.state;
+      if (s.phase !== 'live' || !s.teams.length) return;
+      const i = Math.floor(Math.random() * s.teams.length), d = Math.random() < 0.72 ? 2 : -2;
+      this.bump(i, d);
+    }, 1400);
+    this.voteLoop = setInterval(() => {
+      const s = this.state;
+      if (s.phase !== 'judge') return;
+      const tot = s.votes.v5 + s.votes.v2 + s.votes.vn;
+      if (tot >= s.teams.length - 1) return;
+      const r = Math.random(), k = r < 0.55 ? 'v5' : r < 0.85 ? 'v2' : 'vn';
+      this.setState(st => ({ votes: { ...st.votes, [k]: st.votes[k] + 1 } }));
+    }, 380);
+  }
+  componentWillUnmount() { clearInterval(this.tick); clearInterval(this.scoreLoop); clearInterval(this.voteLoop); this.timers.forEach(clearTimeout); window.removeEventListener('resize', this.onResize); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  joinLoop() {
+    const step = () => { const s = this.state; if (s.phase !== 'lobby' || s.joined >= this.NAMES.length) return; this.setState(st => ({ joined: st.joined + 1, teams: [...st.teams, { name: this.NAMES[st.joined], score: 0, delta: 0, deltaId: 0 }] })); this.later(step, 700 + Math.random() * 600); };
+    this.later(step, 900);
+  }
+  bump(i, d) {
+    this.setState(st => { const teams = st.teams.map((t, j) => j === i ? { ...t, score: Math.max(0, t.score + d), delta: d, deltaId: Date.now() } : t); return { teams }; });
+    this.later(() => this.setState(st => ({ teams: st.teams.map((t, j) => j === i ? { ...t, delta: 0 } : t) })), 1500);
+  }
+  startGame() {
+    this.setState({ phase: 'countdown', count: 3, secs: this.R, total: this.R });
+    [1, 2, 3].forEach(i => this.later(() => { if (this.state.phase === 'countdown') this.setState({ count: 3 - i }); }, i * 900));
+    this.later(() => { if (this.state.phase === 'countdown') this.setState({ phase: 'live' }); }, 3700);
+  }
+  applyVotes() {
+    const s = this.state, m = this.MATCHES[s.judgeIdx % this.MATCHES.length];
+    const tot = s.votes.v5 + s.votes.v2 + s.votes.vn;
+    if (tot && s.teams[m.team]) { const pts = Math.round((s.votes.v5 * 5 + s.votes.v2 * 2 - s.votes.vn * 2) / tot); this.setState(st => ({ teams: st.teams.map((t, j) => j === m.team ? { ...t, score: Math.max(0, t.score + pts) } : t) })); }
+  }
+  renderVals() {
+    const s = this.state;
+    const sorted = s.teams.map((t, i) => ({ ...t, i })).sort((a, b) => b.score - a.score);
+    const max = Math.max(10, ...s.teams.map(t => t.score));
+    const board = sorted.map((t, rank) => {
+      const lead = rank === 0 && t.score > 0, up = t.delta > 0, down = t.delta < 0;
+      return { name: t.name, rank: rank + 1, score: t.score, top: `${rank * 52}px`, width: `${Math.max(2, Math.round(t.score / max * 100))}%`,
+        rankColor: lead ? '#FCD611' : '#C7ABD4', scoreColor: lead ? '#FCD611' : '#fff',
+        barBg: lead ? 'linear-gradient(90deg,#D9B400,#FCD611)' : up ? 'linear-gradient(90deg,#4FBF87,#00FF87)' : down ? 'linear-gradient(90deg,#B3003C,#FF0055)' : 'linear-gradient(90deg,#702E91,#A855D6)',
+        barGlow: lead ? '0 0 26px rgba(252,214,17,0.5)' : up ? '0 0 26px rgba(0,255,135,0.55)' : down ? '0 0 26px rgba(255,0,85,0.55)' : '0 0 14px rgba(168,85,214,0.3)',
+        lift: up ? 'translateY(-8px)' : down ? 'translateY(6px) scale(.985)' : 'none',
+        hasDelta: up || down, delta: up ? '+2' : '-2', deltaId: t.deltaId, deltaColor: up ? '#00FF87' : '#FF0055' };
+    });
+    const mmss = `${Math.floor(s.secs / 60)}:${String(s.secs % 60).padStart(2, '0')}`;
+    const C = 2 * Math.PI * 98, frac = Math.min(1, s.secs / s.total);
+    const tc = s.secs > s.total / 2 ? '#00FF87' : s.secs > 10 ? '#FCD611' : '#FF0055';
+    const v = s.votes, tot = v.v5 + v.v2 + v.vn;
+    const pct5 = tot ? Math.round(v.v5 / tot * 100) : 0, pct2 = tot ? Math.round(v.v2 / tot * 100) : 0, pctN = tot ? 100 - pct5 - pct2 : 0;
+    const wAvg = tot ? (v.v5 * 5 + v.v2 * 2 - v.vn * 2) / tot : 0;
+    const colors = ['#FCD611', '#A855D6', '#C7ABD4', '#702E91', '#FFF1A8'];
+    const confetti = Array.from({ length: 48 }, (_, i) => ({ left: `${(i * 37) % 100}%`, w: `${10 + (i % 4) * 4}px`, h: `${14 + (i % 3) * 6}px`, bg: colors[i % colors.length], r: i % 3 === 0 ? '50%' : '3px', dur: `${5 + (i % 5) * 0.9}s`, delay: `-${(i * 0.37) % 6}s` }));
+    const pod = k => sorted[k] || { name: '—', score: 0 };
+    const phaseLabel = { setup: 'הגדרות', lobby: 'לובי', countdown: 'ספירה לאחור', live: 'סבב חי', ended: 'הסבב הסתיים', judge: 'שיפוט', podium: 'פודיום' }[s.phase];
+    const live = s.phase === 'live' || s.phase === 'countdown' || s.phase === 'ended';
+    return {
+      scale: s.scale, stageH: `${s.stageH}px`,
+      isSetup: s.phase === 'setup', isLobby: s.phase === 'lobby', minutes: s.minutes,
+      minusMin: () => this.setState(st => ({ minutes: Math.max(1, st.minutes - 1) })), plusMin: () => this.setState(st => ({ minutes: Math.min(15, st.minutes + 1) })),
+      openLobby: () => { this.setState({ phase: 'lobby' }); this.joinLoop(); },
+      addMinute: () => this.setState(st => ({ secs: st.secs + 60, total: st.total + 60 })), isLive: live, isCountdown: s.phase === 'countdown', isEnded: s.phase === 'ended', isJudge: s.phase === 'judge', isPodium: s.phase === 'podium',
+      qr: this.qr(42), qr2: this.qr(7), joinedCount: s.joined, lobbyTeams: s.teams, teamsCount: s.teams.length, round: s.round,
+      board, secs: mmss, timerColor: tc, timerAnim: s.secs <= 10 && s.secs > 0 ? 'flash .7s infinite' : 'none', bigDash: `${(C * frac).toFixed(1)} ${(C * (1 - frac)).toFixed(1)}`,
+      countLabel: s.count > 0 ? s.count : 'צאו!', countDir: s.count > 0 ? 'ltr' : 'rtl',
+      match: (m => ({ ...m, descA: this.DESC[m.a] || '', descB: this.DESC[m.b] || '' }))(this.MATCHES[s.judgeIdx % this.MATCHES.length]), judgeNum: (s.judgeIdx % this.MATCHES.length) + 1, judgeTotal: this.MATCHES.length,
+      votesTotal: tot, weighted: (wAvg >= 0 ? '+' : '') + wAvg.toFixed(1), pct5, pct2, pctN, confetti,
+      p1: pod(0), p2: pod(1), p3: pod(2), phaseLabel,
+      hostStart: () => this.startGame(), notLobby: s.phase !== 'lobby' || s.teams.length < 2, opLobby: s.phase === 'lobby' && s.teams.length >= 2 ? 1 : 0.35,
+      hostEnd: () => this.setState({ phase: 'ended' }), notRunning: s.phase !== 'live', opRunning: s.phase === 'live' ? 1 : 0.35,
+      hostJudge: () => this.setState({ phase: 'judge', judgeIdx: 0, votes: { v5: 0, v2: 0, vn: 0 } }), notEnded: s.phase !== 'ended', opEnded: s.phase === 'ended' ? 1 : 0.35,
+      hostNext: () => { this.applyVotes(); this.setState(st => ({ judgeIdx: st.judgeIdx + 1, votes: { v5: 0, v2: 0, vn: 0 } })); }, notJudge: s.phase !== 'judge', opJudge: s.phase === 'judge' ? 1 : 0.35,
+      hostPodium: () => { this.applyVotes(); this.setState({ phase: 'podium' }); },
+      nextLabel: (s.judgeIdx % this.MATCHES.length) + 1 >= this.MATCHES.length ? '🏆 לפודיום' : '⏭️ לשידוך הבא',
+      hostNextOrPodium: () => { this.applyVotes(); if ((s.judgeIdx % this.MATCHES.length) + 1 >= this.MATCHES.length) this.setState({ phase: 'podium' }); else this.setState(st => ({ judgeIdx: st.judgeIdx + 1, votes: { v5: 0, v2: 0, vn: 0 } })); },
+      hostReset: () => { this.timers.forEach(clearTimeout); this.timers = []; this.setState({ phase: 'setup', joined: 0, teams: [], secs: this.R, total: this.R, count: 3, round: 1, judgeIdx: 0, votes: { v5: 0, v2: 0, vn: 0 } }); }
+    };
+  }
+  qr(seed) {
+    const N = 25, cells = []; let s = seed;
+    const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+    const finder = (x, y) => { const fx = x < 7 && y < 7, fy = x >= N - 7 && y < 7, fz = x < 7 && y >= N - 7; if (!(fx || fy || fz)) return null; const lx = fx || fz ? x : x - (N - 7), ly = fx || fy ? y : y - (N - 7); return lx === 0 || lx === 6 || ly === 0 || ly === 6 || (lx >= 2 && lx <= 4 && ly >= 2 && ly <= 4); };
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const f = finder(x, y); const on = f !== null ? f : (x === 6 || y === 6) ? (x + y) % 2 === 0 : rnd() > 0.52; cells.push({ bg: on ? '#2A1638' : '#fff' }); }
+    return cells;
+  }
+}
+</script>
+</body>
+</html>

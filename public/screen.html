@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>שת"פ נולד · מסך</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/screen.css">
+</head>
+<body>
+  <div class="stage-wrap" id="stage-wrap">
+    <div class="stage" id="stage">
+      <img class="stage-logo" src="/assets/logo.png" alt="">
+      <!-- Added: host reset, available on every screen -->
+      <button type="button" id="btn-reset" class="ghost-btn reset-btn">↺ איפוס המשחק</button>
+
+      <!-- SETUP (host, before the lobby opens) -->
+      <section class="setup" data-screen="setup" hidden>
+        <div class="title-block">
+          <div class="title">שת"פ נולד</div>
+          <div class="subtitle">של הבית לעסקים גליל מזרחי</div>
+        </div>
+        <div class="settings-box">
+          <div class="settings-title">הגדרות המשחק · משך הסבב</div>
+          <div class="minutes-row" dir="ltr">
+            <button type="button" id="btn-minus" class="round-btn" aria-label="פחות דקה">−</button>
+            <div class="minutes-wrap" dir="rtl"><span dir="ltr" class="minutes" data-bind="minutes">15</span><span class="minutes-unit">דקות</span></div>
+            <button type="button" id="btn-plus" class="round-btn" aria-label="עוד דקה">+</button>
+          </div>
+          <div class="settings-divider"></div>
+          <div class="pool-row">
+            <div class="pool-buttons">
+              <label class="ghost-btn file-btn" for="pool-file">📂 טעינת קובץ עסקים (JSON)<input type="file" id="pool-file" accept=".json,application/json"></label>
+              <a class="ghost-btn" id="btn-template" href="/api/host/businesses-template.json" download="תבנית-עסקים.json">⬇️ הורדת קובץ לדוגמה</a>
+            </div>
+            <div class="pool-summary" data-bind="pool-summary"></div>
+          </div>
+          <button type="button" id="btn-open-lobby" class="primary-btn">פתיחת הלובי 🚀</button>
+        </div>
+      </section>
+
+      <!-- LOBBY -->
+      <section class="lobby" data-screen="lobby" hidden>
+        <div class="title-block lobby-title">
+          <div class="title">שת"פ נולד</div>
+          <div class="subtitle">של הבית לעסקים גליל מזרחי</div>
+        </div>
+        <div class="lobby-main">
+          <div class="qr-frame" dir="ltr"><img class="qr-img" data-bind="player-qr" alt="QR להצטרפות"></div>
+          <div class="lobby-text">
+            <div class="lobby-headline">סורקים, נרשמים בזוגות ומתחילים!</div>
+            <div class="lobby-count"><span class="dots" dir="ltr"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span><span dir="ltr" data-bind="team-count">0</span> צמדים נרשמו</div>
+            <button type="button" id="btn-start" class="launch-btn" disabled>🚀 הזנקת המשחק</button>
+          </div>
+        </div>
+        <div class="spacer"></div>
+        <div class="lobby-teams" data-bind="lobby-teams"></div>
+      </section>
+
+      <!-- LIVE BOARD (also behind countdown / paused / ended) -->
+      <section class="live" data-screen="live" hidden>
+        <div class="live-head">
+          <div class="live-title" data-bind="round-label">שת"פ נולד – סבב <span dir="ltr" class="round-num">1</span></div>
+          <div class="ring-wrap">
+            <svg width="200" height="200" viewBox="0 0 220 220" class="ring-svg">
+              <circle cx="110" cy="110" r="98" class="ring-track"></circle>
+              <circle cx="110" cy="110" r="98" class="ring-fill" data-bind="round-ring"></circle>
+            </svg>
+            <div dir="ltr" class="ring-label" data-bind="round-clock">0:00</div>
+          </div>
+          <div></div>
+        </div>
+        <div class="board" data-board="live"></div>
+        <div class="live-bar">
+          <button type="button" id="btn-add-time" class="bar-btn">⏳ הוסף דקה לסבב</button>
+          <button type="button" id="btn-pause" class="bar-btn">⏸ השהיית הסבב</button>
+          <button type="button" id="btn-resume" class="bar-btn" hidden>▶ המשך הסבב</button>
+          <button type="button" id="btn-end-round" class="bar-btn">⏹ סיום הסבב</button>
+        </div>
+      </section>
+
+      <!-- JUDGING -->
+      <section class="judging" data-screen="judging" hidden>
+        <div class="judge-head">
+          <div class="judge-caption">העריכו את השידוך המוצג על הלוח:</div>
+          <div dir="ltr" class="judge-index" data-bind="judge-index">1/1</div>
+        </div>
+        <div class="judge-card" data-judge-card>
+          <div class="judge-pair">
+            <div class="judge-biz"><div class="judge-name" data-bind="judge-a"></div><div class="judge-desc" data-bind="judge-desc-a"></div></div>
+            <div class="judge-hands">🤝</div>
+            <div class="judge-biz"><div class="judge-name" data-bind="judge-b"></div><div class="judge-desc" data-bind="judge-desc-b"></div></div>
+          </div>
+          <div class="judge-divider"></div>
+          <div class="judge-arg">"<span data-bind="judge-arg"></span>"</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="judge-bottom">
+          <div class="judge-stats">
+            <div class="judge-stats-right">
+              <div class="votes-total"><span dir="ltr" data-bind="votes-total">0</span> הצבעות נקלטו</div>
+              <button type="button" id="btn-next" class="next-btn">⏭️ לשידוך הבא</button>
+              <button type="button" id="btn-finish-judging" class="finish-judging-btn" hidden>⏹ סיום השיפוט</button>
+            </div>
+            <div class="weighted-wrap"><span class="weighted-label">ציון משוקלל</span><span dir="ltr" class="weighted" data-bind="weighted">+0.0</span></div>
+          </div>
+          <div class="meter">
+            <div class="meter-5" data-meter="5"></div>
+            <div class="meter-2" data-meter="2"></div>
+            <div class="meter-n" data-meter="n"></div>
+          </div>
+          <div class="legend">
+            <div class="legend-item legend-5"><span class="legend-emoji">💡</span><div class="legend-text"><span class="legend-title">איזו הברקה!</span><span class="legend-pts">(+5 נקודות)</span></div><span dir="ltr" class="legend-pct" data-bind="pct-5">0%</span></div>
+            <div class="legend-item legend-2"><span class="legend-emoji">👍</span><div class="legend-text"><span class="legend-title">שווה לנסות</span><span class="legend-pts">(+2 נקודות)</span></div><span dir="ltr" class="legend-pct" data-bind="pct-2">0%</span></div>
+            <div class="legend-item legend-n"><span class="legend-emoji">❌</span><div class="legend-text"><span class="legend-title">לא להמציא!</span><span class="legend-pts">(-2 נקודות)</span></div><span dir="ltr" class="legend-pct" data-bind="pct-n">0%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PODIUM -->
+      <section class="podium" data-screen="podium" hidden>
+        <div class="confetti" data-confetti></div>
+        <div class="podium-main">
+          <div class="podium-title">המנצחים של הערב</div>
+          <div class="spacer"></div>
+          <div class="podium-blocks" dir="ltr">
+            <div class="podium-col col-2">
+              <div class="pod-name" data-bind="p2-name">—</div>
+              <div dir="ltr" class="pod-score" data-bind="p2-score">0</div>
+              <div class="block block-2"><div class="block-cap"></div><div class="block-body">2</div></div>
+            </div>
+            <div class="podium-col col-1">
+              <div class="crown">👑</div>
+              <div class="pod-name pod-name-1" data-bind="p1-name">—</div>
+              <div dir="ltr" class="pod-score pod-score-1" data-bind="p1-score">0</div>
+              <div class="block block-1"><div class="block-cap"></div><div class="block-body">1</div></div>
+            </div>
+            <div class="podium-col col-3">
+              <div class="pod-name" data-bind="p3-name">—</div>
+              <div dir="ltr" class="pod-score" data-bind="p3-score">0</div>
+              <div class="block block-3"><div class="block-cap"></div><div class="block-body">3</div></div>
+            </div>
+          </div>
+          <div class="podium-floor"></div>
+        </div>
+        <div class="export-panel">
+          <div class="export-icon">📄</div>
+          <div class="export-text">קובץ הסיכום המלא של כל שיתופי הפעולה שנוצרו הערב זמין עכשיו להורדה בטלפון שלכם!</div>
+          <div class="export-divider"></div>
+          <button type="button" id="btn-export" class="export-btn">📄 ייצא קובץ סיכום</button>
+        </div>
+      </section>
+
+      <!-- COUNTDOWN overlay -->
+      <div class="overlay-countdown" data-overlay="countdown" hidden>
+        <div class="countdown-caption">מתחילים בעוד</div>
+        <div dir="ltr" class="countdown-digit" data-bind="countdown-label">3</div>
+      </div>
+
+      <!-- ROUND ENDED overlay (also the judging-done variant) -->
+      <div class="overlay-ended" data-overlay="ended" data-variant="ended" hidden>
+        <div class="pulse-wrap"><div class="pulse-ring"></div><div class="pulse-emoji" data-bind="ended-emoji">⏱</div></div>
+        <div class="ended-title" data-bind="ended-title">הסבב הסתיים!</div>
+        <div class="ended-sub" data-bind="ended-sub">עוברים לשלב השיפוט — הצמדים מצביעים מהטלפונים</div>
+        <button type="button" id="btn-judging" class="big-yellow-btn">⏭️ עבור לשלב השיפוט</button>
+        <button type="button" id="btn-podium" class="big-yellow-btn" hidden>🏆 לפודיום</button>
+      </div>
+
+      <!-- PAUSED overlay (added) -->
+      <!-- Added: in-app confirmation dialog (replaces the browser's confirm) -->
+      <div class="overlay-confirm" data-overlay="confirm" hidden>
+        <div class="confirm-card">
+          <div class="confirm-title" data-bind="confirm-title"></div>
+          <div class="confirm-body" data-bind="confirm-body"></div>
+          <div class="confirm-actions">
+            <button type="button" id="btn-confirm-yes" class="primary-btn confirm-yes">אישור</button>
+            <button type="button" id="btn-confirm-no" class="ghost-btn confirm-no">ביטול</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="overlay-paused" data-overlay="paused" hidden>
+        <div class="pulse-wrap"><div class="pulse-ring"></div><div class="pulse-emoji">⏸</div></div>
+        <div class="ended-title">הסבב מושהה</div>
+        <div class="ended-sub">המשחק ימשיך בעוד רגע — הישארו עם הצמד שלכם</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/screen.js"></script>
+</body>
+</html>

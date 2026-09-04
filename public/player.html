@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#41205F">
+  <title>שת"פ נולד · הבית לעסקים גליל מזרחי</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/player.css">
+</head>
+<body>
+  <img class="corner-logo" src="/assets/logo.png" alt="" data-bind="corner-logo">
+
+  <!-- Splash (every page load) -->
+  <div class="splash" data-overlay="splash">
+    <div class="splash-glow"></div>
+    <img class="splash-logo" src="/assets/logo-vertical.svg" alt="">
+  </div>
+
+  <!-- Onboarding -->
+  <section class="intro" data-screen="onboarding" hidden>
+    <img class="intro-logo" src="/assets/logo-vertical.svg" alt="">
+    <div class="intro-title">
+      <div class="intro-h1">שת"פ נולד</div>
+      <div class="intro-sub">של הבית לעסקים גליל מזרחי</div>
+    </div>
+    <form id="join-form" class="join" autocomplete="off" novalidate>
+      <div class="fields">
+        <label class="field">
+          <span class="field-label">שם הקבוצה / הצמד</span>
+          <input id="teamName" name="teamName" type="text" maxlength="40" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </label>
+      </div>
+      <div class="spacer"></div>
+      <button id="btn-register" type="submit" class="btn-primary" disabled>נכנסים למשחק 🚀</button>
+    </form>
+  </section>
+
+  <!-- Waiting for the host -->
+  <section class="intro" data-screen="waiting" hidden>
+    <img class="intro-logo" src="/assets/logo-vertical.svg" alt="">
+    <div class="intro-title">
+      <div class="intro-h1">שת"פ נולד</div>
+      <div class="intro-sub">של הבית לעסקים גליל מזרחי</div>
+    </div>
+    <div class="wait-body">
+      <div class="pulse-150">
+        <div class="ring-a"></div>
+        <div class="ring-b"></div>
+        <div class="emoji">🤝</div>
+      </div>
+      <div class="wait-box">נרשמתם בהצלחה!<br>המשחק יתחיל מיד ברגע שהמנחה יזניק...</div>
+      <div class="dots" dir="ltr"><span></span><span></span><span></span></div>
+    </div>
+    <div class="wait-team" data-bind="team-name"></div>
+  </section>
+
+  <!-- Game board -->
+  <section class="board" data-screen="board" hidden>
+    <div class="board-head">
+      <div class="ll-col">
+        <div class="lifelines" data-bind="lifelines" data-count="3"><span>🛟</span><span>🛟</span><span>🛟</span></div>
+        <div class="ll-label">חבלי הצלה</div>
+      </div>
+      <div class="ring">
+        <svg width="76" height="76" viewBox="0 0 76 76">
+          <circle class="ring-track" cx="38" cy="38" r="33"></circle>
+          <circle class="ring-prog" cx="38" cy="38" r="33" data-bind="timer-ring"></circle>
+        </svg>
+        <div dir="ltr" class="ring-label" data-bind="timer-label">1:00</div>
+      </div>
+      <div class="team-col">
+        <div class="team-name" data-bind="team-name"></div>
+        <div class="badge" data-bind="score-badge"><span dir="ltr" data-bind="score">0</span> נק'</div>
+        <div dir="ltr" class="float" data-bind="score-float" hidden></div>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card" data-slot="1">
+        <div class="card-body">
+          <div class="biz-name" data-bind="name"></div>
+          <div class="biz-desc" data-bind="description"></div>
+        </div>
+        <button type="button" class="swap" data-lifeline="1"><span class="swap-ico">🛟</span>החלף עסק זה</button>
+      </div>
+      <div class="connector" data-bind="connector">
+        <div class="conn-line-a"></div>
+        <div class="conn-hand">🤝</div>
+        <div class="conn-line-b"></div>
+      </div>
+      <div class="card" data-slot="2">
+        <div class="card-body">
+          <div class="biz-name" data-bind="name"></div>
+          <div class="biz-desc" data-bind="description"></div>
+        </div>
+        <button type="button" class="swap" data-lifeline="2"><span class="swap-ico">🛟</span>החלף עסק זה</button>
+      </div>
+    </div>
+    <div class="actions">
+      <button type="button" id="btn-yes" class="btn-yes">יש פוטנציאל! 🟩</button>
+      <button type="button" id="btn-no" class="btn-no">אין סיכוי לשת"פ ❌</button>
+    </div>
+  </section>
+
+  <!-- Argument bottom sheet -->
+  <div class="modal" data-modal="argument" hidden>
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <div class="modal-ring-wrap">
+      <div class="ring">
+        <svg width="76" height="76" viewBox="0 0 76 76">
+          <circle class="ring-track ring-track-paused" cx="38" cy="38" r="33"></circle>
+          <circle class="ring-paused" cx="38" cy="38" r="33" data-bind="paused-ring"></circle>
+        </svg>
+        <div class="ring-pause">⏸</div>
+      </div>
+    </div>
+    <form id="argument-form" class="sheet" novalidate>
+      <div class="sheet-handle" data-action="close-modal"></div>
+      <div class="sheet-title">הטיימר נעצר!<br>למה זה שידוך מנצח?</div>
+      <div class="pills">
+        <span class="pill" data-bind="arg-a"></span>
+        <span class="pills-hand">🤝</span>
+        <span class="pill" data-bind="arg-b"></span>
+      </div>
+      <div class="ta-wrap">
+        <textarea id="argument" name="argument" maxlength="120" rows="4"></textarea>
+        <div dir="ltr" class="counter" id="argument-counter">0/120</div>
+      </div>
+      <button id="btn-submit-argument" type="submit" class="btn-primary sheet-submit" disabled>אישור ושליחה (+2 נקודות) 🚀</button>
+    </form>
+  </div>
+
+  <!-- 3-2-1 countdown -->
+  <div class="countdown" data-overlay="countdown" hidden>
+    <div class="countdown-kicker">מתחילים בעוד</div>
+    <div dir="ltr" class="countdown-digit pop" data-bind="countdown-label">3</div>
+    <div class="countdown-team" data-bind="team-name"></div>
+  </div>
+
+  <!-- Paused (added) -->
+  <div class="paused" data-overlay="paused" hidden>
+    <div class="pulse-170">
+      <div class="ring-a"></div>
+      <div class="ring-b"></div>
+      <div class="emoji">⏸</div>
+    </div>
+    <div class="ended-text">
+      <div class="ended-title">המשחק מושהה</div>
+      <div class="ended-sub">המנחה עצר את הסבב לרגע.<br>הזמן שלכם שמור — ממשיכים ברגע שהמנחה ילחץ המשך!</div>
+    </div>
+    <div class="dots" dir="ltr"><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- Round ended, waiting for judging -->
+  <section class="ended" data-screen="ended" hidden>
+    <div class="pulse-170">
+      <div class="ring-a"></div>
+      <div class="ring-b"></div>
+      <div class="emoji">⏱</div>
+    </div>
+    <div class="ended-text">
+      <div class="ended-title">הסבב הסתיים!</div>
+      <div class="ended-sub">שלחתם את כל השידוכים שלכם.<br>ממתינים שהמנחה יפתח את שלב הדירוג וההצבעות — עיניים על המסך הגדול!</div>
+    </div>
+    <div class="dots" dir="ltr"><span></span><span></span><span></span></div>
+    <div class="stats">
+      <div class="stat"><span dir="ltr" class="stat-num" data-bind="my-matches">0</span><span class="stat-label">שידוכים</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span dir="ltr" class="stat-num gold" data-bind="ended-score">0</span><span class="stat-label">נקודות</span></div>
+    </div>
+  </section>
+
+  <!-- Judging, no match on the board (added) -->
+  <section class="ended" data-screen="judging-wait" hidden>
+    <div class="pulse-170">
+      <div class="ring-a"></div>
+      <div class="ring-b"></div>
+      <div class="emoji">⚖️</div>
+    </div>
+    <div class="ended-text">
+      <div class="ended-title" data-bind="jw-title">שלב השיפוט</div>
+      <div class="ended-sub" data-bind="jw-sub">ממתינים שהמנחה יעלה את השידוך הבא ללוח...<br>עיניים על המסך הגדול!</div>
+    </div>
+    <div class="dots" dir="ltr"><span></span><span></span><span></span></div>
+    <div class="stats">
+      <div class="stat"><span dir="ltr" class="stat-num" data-bind="jw-matches">0</span><span class="stat-label">שידוכים</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span dir="ltr" class="stat-num gold" data-bind="jw-score">0</span><span class="stat-label">נקודות</span></div>
+    </div>
+  </section>
+
+  <!-- Voting: other team -->
+  <section class="vote" data-screen="vote" hidden>
+    <div class="vote-title">העריכו את השידוך המוצג על הלוח:</div>
+    <div class="vote-scroll">
+      <div class="vote-card">
+        <div class="vote-pair">
+          <div class="vote-biz"><div class="vote-biz-name" data-bind="other-a"></div><div class="vote-biz-desc" data-bind="other-desc-a"></div></div>
+          <div class="vote-hand">🤝</div>
+          <div class="vote-biz"><div class="vote-biz-name" data-bind="other-b"></div><div class="vote-biz-desc" data-bind="other-desc-b"></div></div>
+        </div>
+        <div class="vote-sep"></div>
+        <div class="vote-arg">"<span data-bind="other-arg"></span>"</div>
+      </div>
+    </div>
+    <div class="vote-actions" data-bind="vote-actions">
+      <div class="vote-status" data-bind="vote-status" hidden>הצבעתך נקלטה!</div>
+      <button type="button" class="vote-btn" data-vote="5"><span class="vote-ico">💡</span><span class="vote-txt"><span class="vote-main">איזו הברקה!</span><span class="vote-pts">(+5 נקודות)</span></span></button>
+      <button type="button" class="vote-btn" data-vote="2"><span class="vote-ico">👍</span><span class="vote-txt"><span class="vote-main">שווה לנסות</span><span class="vote-pts">(+2 נקודות)</span></span></button>
+      <button type="button" class="vote-btn" data-vote="-2"><span class="vote-ico">❌</span><span class="vote-txt"><span class="vote-main">לא להמציא!</span><span class="vote-pts">(-2 נקודות)</span></span></button>
+    </div>
+  </section>
+
+  <!-- Voting: own match -->
+  <section class="own" data-screen="own" hidden>
+    <div class="own-badge-wrap">
+      <div class="badge" data-bind="own-score-badge"><span dir="ltr" data-bind="own-score">0</span> נק'</div>
+      <div dir="ltr" class="own-float" data-bind="own-score-float" hidden></div>
+    </div>
+    <div class="own-center">
+      <div class="own-orb">
+        <div class="own-glow"></div>
+        <div class="own-ring-a"></div>
+        <div class="own-ring-b"></div>
+        <div class="own-core">🤝</div>
+        <div class="spark-1">✦</div>
+        <div class="spark-2">✦</div>
+        <div class="spark-3">✦</div>
+      </div>
+    </div>
+    <div class="own-text">
+      <div class="own-title">זה השידוך שלכם! 🌟</div>
+      <div class="own-sub">השופטים והמשתתפים באולם מצביעים כעת על הרעיון שלכם. החזיקו אצבעות!</div>
+    </div>
+    <div class="pills own-pills">
+      <span class="pill" data-bind="own-a"></span>
+      <span class="pills-hand">🤝</span>
+      <span class="pill" data-bind="own-b"></span>
+    </div>
+  </section>
+
+  <!-- Game over: summary download -->
+  <section class="summary" data-screen="summary" hidden>
+    <div class="pulse-170">
+      <div class="ring-a"></div>
+      <div class="summary-icon">📄</div>
+    </div>
+    <div class="summary-text">
+      <div class="ended-title">המשחק הסתיים! 🌟</div>
+      <div class="summary-sub">קובץ הסיכום המלא של כל שיתופי הפעולה שנוצרו הערב מחכה לכם כאן.</div>
+    </div>
+    <div class="stats tight">
+      <div class="stat"><span dir="ltr" class="stat-num" data-bind="final-matches">0</span><span class="stat-label">שידוכים</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span dir="ltr" class="stat-num gold" data-bind="final-score">0</span><span class="stat-label">נקודות</span></div>
+    </div>
+    <button type="button" class="btn-download" data-action="download">📄 הורדת קובץ הסיכום</button>
+    <div class="downloaded" data-bind="downloaded" hidden>הקובץ בדרך אליכם ✓</div>
+  </section>
+
+  <!-- Connection hint (added) -->
+  <div class="conn" data-bind="conn" hidden>אין חיבור לשרת, מתחברים מחדש...</div>
+
+  <script src="/js/common.js"></script>
+  <script src="/js/player.js"></script>
+</body>
+</html>

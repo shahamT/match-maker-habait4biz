@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#1F1130;}
+a{color:#C7ABD4;} a:hover{color:#FCD611;}
+@keyframes popIn{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.06);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes floatUp{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-70px);opacity:0}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes confetti{0%{transform:translateY(-120px) rotate(0deg);opacity:1}100%{transform:translateY(1200px) rotate(720deg);opacity:.9}}
+@keyframes meterGrow{0%{width:0}100%{width:var(--w)}}
+@keyframes barLift{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+</style>
+</helmet>
+<div dir="rtl" style="min-height:100vh;padding:48px 56px 96px;font-family:Rubik,Heebo,sans-serif;color:#fff;background:#1F1130;display:flex;flex-direction:column;gap:56px;">
+
+<section style="display:flex;flex-direction:column;gap:32px;">
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <div style="font-size:12px;letter-spacing:3px;color:#C7ABD4;font-weight:700;">סבב 2</div>
+    <h1 style="margin:0;font-size:30px;font-weight:900;">מסך ההקרנה · <span dir="ltr">1920 × 1080</span></h1>
+    <div style="font-size:14px;color:#C7ABD4;max-width:720px;line-height:1.6;text-wrap:pretty;">ארבעה מצבים, נצפים מרחוק. אותה שפה כמו האפליקציה: סגול בהיר, צהוב לניצחון, ירוק/אדום רק ברגע שינוי הניקוד.</div>
+  </div>
+
+  <!-- 2a Lobby -->
+  <div id="2a" style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;align-items:center;gap:10px;"><a href="#2a" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;" dir="ltr">2a</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 7 — לובי והרשמה</span></div>
+    <div style="width:1920px;height:1080px;position:relative;overflow:hidden;border-radius:24px;background:radial-gradient(120% 70% at 50% -10%,#6E3899 0%,#41205F 55%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;padding:56px 96px 64px;">
+      <img src="assets/logo.png" alt="" style="position:absolute;top:44px;left:56px;height:54px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.9;">
+      <div style="text-align:center;display:flex;flex-direction:column;gap:6px;margin-top:8px;">
+        <div style="font-size:72px;line-height:1;font-weight:900;text-shadow:0 0 10px #A855D6,0 0 34px #A855D6,0 0 80px #702E91;">מחולל השתפ"ים</div>
+        <div style="font-size:26px;font-weight:700;color:#C7ABD4;">של הבית לעסקים גליל מזרחי</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:72px;margin-top:44px;">
+        <div style="width:360px;height:360px;border-radius:36px;background:#fff;border:14px solid #C7ABD4;box-shadow:0 0 0 6px rgba(199,171,212,0.25),0 0 80px rgba(168,85,214,0.55);display:grid;grid-template-columns:repeat(25,1fr);grid-template-rows:repeat(25,1fr);padding:18px;box-sizing:border-box;" dir="ltr">
+          <sc-for list="{{ qr }}" as="c" hint-placeholder-count="625"><div style="background:{{ c.bg }};border-radius:1px;"></div></sc-for>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px;max-width:640px;">
+          <div style="font-size:64px;line-height:1.15;font-weight:900;text-wrap:pretty;">סורקים, נרשמים בזוגות ומתחילים!</div>
+          <div style="display:flex;align-items:center;gap:14px;color:#FCD611;font-size:26px;font-weight:800;"><span style="display:inline-flex;gap:8px;" dir="ltr"><span style="width:12px;height:12px;border-radius:50%;background:#FCD611;animation:flash 1.2s infinite;"></span><span style="width:12px;height:12px;border-radius:50%;background:#FCD611;animation:flash 1.2s infinite .2s;"></span><span style="width:12px;height:12px;border-radius:50%;background:#FCD611;animation:flash 1.2s infinite .4s;"></span></span><span dir="ltr">{{ teamCount }}</span> צמדים נרשמו</div>
+        </div>
+      </div>
+      <div style="flex:1;"></div>
+      <div style="width:100%;display:grid;grid-template-columns:repeat(7,1fr);gap:16px;">
+        <sc-for list="{{ lobbyTeams }}" as="t" hint-placeholder-count="14">
+          <div style="height:84px;border-radius:20px;background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.3);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;text-align:center;padding:0 14px;box-shadow:0 10px 30px rgba(0,0,0,0.3);animation:popIn .5s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:{{ t.delay }};">{{ t.name }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2b Leaderboard -->
+  <div id="2b" style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;align-items:center;gap:10px;"><a href="#2b" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #FCD611;color:#FCD611;" dir="ltr">2b</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 8 — לוח תוצאות חי (רגע באמצע אנימציה: שורה עולה ב־2+, שורה יורדת ב־2-)</span></div>
+    <div style="width:1920px;height:1080px;position:relative;overflow:hidden;border-radius:24px;background:radial-gradient(120% 70% at 50% -10%,#6E3899 0%,#41205F 55%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;padding:44px 96px 56px;">
+      <img src="assets/logo.png" alt="" style="position:absolute;top:44px;left:56px;height:54px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.9;">
+      <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
+        <div style="font-size:52px;font-weight:900;text-shadow:0 0 10px #A855D6,0 0 30px #A855D6;">מחולל השתפ"ים – סבב חי</div>
+        <div style="position:relative;width:220px;height:220px;">
+          <svg width="220" height="220" viewBox="0 0 220 220" style="transform:rotate(-90deg) scaleY(-1);display:block;">
+            <circle cx="110" cy="110" r="98" style="fill:none;stroke:rgba(199,171,212,0.18);stroke-width:16;"></circle>
+            <circle cx="110" cy="110" r="98" style="fill:none;stroke:#FCD611;stroke-width:16;stroke-linecap:round;stroke-dasharray:{{ bigDash }};filter:drop-shadow(0 0 14px #FCD611);"></circle>
+          </svg>
+          <div dir="ltr" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:84px;font-weight:900;">24</div>
+        </div>
+        <div></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:10px;margin-top:20px;">
+        <sc-for list="{{ board }}" as="r" hint-placeholder-count="10">
+          <div style="display:grid;grid-template-columns:64px 320px 1fr 150px;align-items:center;gap:22px;height:58px;position:relative;transform:{{ r.lift }};transition:transform .4s;">
+            <div dir="ltr" style="font-size:30px;font-weight:900;color:{{ r.rankColor }};text-align:center;">{{ r.rank }}</div>
+            <div style="font-size:30px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ r.name }}</div>
+            <div style="height:46px;border-radius:14px;background:rgba(199,171,212,0.1);position:relative;overflow:visible;">
+              <div style="position:absolute;right:0;top:0;bottom:0;width:{{ r.width }};border-radius:14px;background:{{ r.barBg }};box-shadow:{{ r.barGlow }};transition:width .8s cubic-bezier(.2,.8,.2,1);"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;position:relative;">
+              <div dir="ltr" style="font-size:34px;font-weight:900;color:{{ r.scoreColor }};min-width:70px;text-align:left;">{{ r.score }}</div>
+              <sc-if value="{{ r.hasDelta }}" hint-placeholder-val="{{ false }}">
+                <div dir="ltr" style="font-size:40px;font-weight:900;color:{{ r.deltaColor }};text-shadow:0 0 20px {{ r.deltaColor }};animation:floatUp 1.6s ease-out infinite;">{{ r.delta }}</div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2c Judgment -->
+  <div id="2c" style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;align-items:center;gap:10px;"><a href="#2c" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;" dir="ltr">2c</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 9 — שלב השיפוט, מד ההצבעות מתעדכן בזמן אמת</span></div>
+    <div style="width:1920px;height:1080px;position:relative;overflow:hidden;border-radius:24px;background:radial-gradient(120% 70% at 50% -10%,#6E3899 0%,#41205F 55%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;padding:52px 120px 64px;">
+      <img src="assets/logo.png" alt="" style="position:absolute;top:44px;left:56px;height:54px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.9;">
+      <div style="font-size:40px;font-weight:800;color:#C7ABD4;">העריכו את השידוך המוצג על הלוח:</div>
+      <div style="margin-top:34px;width:1360px;background:linear-gradient(180deg,#532C74,#472465);border:2px solid rgba(199,171,212,0.35);border-radius:40px;padding:60px 64px;display:flex;flex-direction:column;gap:30px;box-shadow:0 0 0 8px rgba(112,46,145,0.25),0 0 90px rgba(168,85,214,0.45),0 30px 70px rgba(0,0,0,0.4);">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:36px;text-align:center;">
+          <div style="display:flex;flex-direction:column;gap:12px;"><div style="font-size:60px;line-height:1.1;font-weight:900;">חוות ריח הדבש</div><div style="font-size:28px;line-height:1.35;color:#C7ABD4;font-weight:500;">דבש, פולן ומוצרי כוורת מהגולן</div></div>
+          <div style="width:110px;height:110px;border-radius:50%;background:#702E91;display:flex;align-items:center;justify-content:center;font-size:56px;box-shadow:0 0 40px rgba(168,85,214,0.7);">🤝</div>
+          <div style="display:flex;flex-direction:column;gap:12px;"><div style="font-size:60px;line-height:1.1;font-weight:900;">צימרים בכפר בלום</div><div style="font-size:28px;line-height:1.35;color:#C7ABD4;font-weight:500;">אירוח כפרי לזוגות ומשפחות</div></div>
+        </div>
+        <div style="height:2px;background:rgba(199,171,212,0.25);"></div>
+        <div style="font-size:46px;line-height:1.5;text-align:center;color:#fff;text-wrap:pretty;">"מארז דבש מקומי בכל חדר בצ'ק-אין, עם קוד הנחה לביקור בחווה למחרת בבוקר"</div>
+      </div>
+      <div style="flex:1;"></div>
+      <div style="width:1360px;display:flex;flex-direction:column;gap:22px;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;">
+          <div style="font-size:30px;font-weight:800;color:#C7ABD4;"><span dir="ltr">{{ votesTotal }}</span> הצבעות נקלטו</div>
+          <div style="display:flex;align-items:baseline;gap:14px;"><span style="font-size:30px;font-weight:800;color:#C7ABD4;">ציון משוקלל</span><span dir="ltr" style="font-size:64px;line-height:1;font-weight:900;color:#FCD611;text-shadow:0 0 20px rgba(252,214,17,0.5);">+{{ weighted }}</span></div>
+        </div>
+        <div style="height:44px;border-radius:22px;background:rgba(199,171,212,0.12);display:flex;overflow:hidden;">
+          <div style="width:{{ pct5 }}%;background:#7BD7A8;transition:width .8s;"></div>
+          <div style="width:{{ pct2 }}%;background:#F0C177;transition:width .8s;"></div>
+          <div style="width:{{ pctN }}%;background:#E8899B;transition:width .8s;"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+          <div style="display:flex;align-items:center;gap:16px;background:rgba(123,215,168,0.12);border:2px solid #7BD7A8;border-radius:20px;padding:16px 24px;"><span style="font-size:40px;">💡</span><div style="display:flex;flex-direction:column;"><span style="font-size:28px;font-weight:900;">איזו הברקה!</span><span style="font-size:18px;color:#C7ABD4;font-weight:700;">(+5 נקודות)</span></div><span dir="ltr" style="margin-right:auto;font-size:44px;font-weight:900;color:#7BD7A8;">{{ pct5 }}%</span></div>
+          <div style="display:flex;align-items:center;gap:16px;background:rgba(240,193,119,0.12);border:2px solid #F0C177;border-radius:20px;padding:16px 24px;"><span style="font-size:40px;">👍</span><div style="display:flex;flex-direction:column;"><span style="font-size:28px;font-weight:900;">שווה לנסות</span><span style="font-size:18px;color:#C7ABD4;font-weight:700;">(+2 נקודות)</span></div><span dir="ltr" style="margin-right:auto;font-size:44px;font-weight:900;color:#F0C177;">{{ pct2 }}%</span></div>
+          <div style="display:flex;align-items:center;gap:16px;background:rgba(232,137,155,0.12);border:2px solid #E8899B;border-radius:20px;padding:16px 24px;"><span style="font-size:40px;">❌</span><div style="display:flex;flex-direction:column;"><span style="font-size:28px;font-weight:900;">לא להמציא!</span><span style="font-size:18px;color:#C7ABD4;font-weight:700;">(-2 נקודות)</span></div><span dir="ltr" style="margin-right:auto;font-size:44px;font-weight:900;color:#E8899B;">{{ pctN }}%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2d Podium -->
+  <div id="2d" style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;align-items:center;gap:10px;"><a href="#2d" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;" dir="ltr">2d</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 10 — פודיום וסיכום</span></div>
+    <div style="width:1920px;height:1080px;position:relative;overflow:hidden;border-radius:24px;background:radial-gradient(120% 70% at 50% -10%,#6E3899 0%,#41205F 55%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.6);display:flex;padding:120px 96px 64px;gap:80px;align-items:stretch;">
+      <img src="assets/logo.png" alt="" style="position:absolute;top:44px;left:56px;height:54px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.9;z-index:3;">
+      <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+        <sc-for list="{{ confetti }}" as="p" hint-placeholder-count="40">
+          <div style="position:absolute;top:-40px;left:{{ p.left }};width:{{ p.w }};height:{{ p.h }};background:{{ p.bg }};border-radius:{{ p.r }};animation:confetti {{ p.dur }} linear infinite;animation-delay:{{ p.delay }};opacity:.95;"></div>
+        </sc-for>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;position:relative;">
+        <div style="font-size:64px;font-weight:900;color:#FCD611;text-shadow:0 0 14px rgba(252,214,17,0.6),0 0 50px rgba(252,214,17,0.3);margin-top:-40px;">המנצחים של הערב</div>
+        <div style="flex:1;"></div>
+        <div style="display:flex;align-items:flex-end;gap:24px;perspective:1200px;" dir="ltr">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+            <div style="font-size:40px;font-weight:900;text-align:center;line-height:1.1;">שירה ועומר</div>
+            <div dir="ltr" style="font-size:34px;font-weight:800;color:#C7ABD4;">31</div>
+            <div style="width:260px;height:230px;position:relative;">
+              <div style="position:absolute;left:0;right:0;top:0;height:34px;background:#C7ABD4;border-radius:14px 14px 0 0;transform:skewX(0) translateY(-28px) scaleY(.85);transform-origin:bottom;box-shadow:inset 0 -6px 0 rgba(0,0,0,0.1);"></div>
+              <div style="position:absolute;left:0;right:0;top:4px;bottom:0;background:linear-gradient(180deg,#9C6FB8,#702E91);border-radius:6px 6px 16px 16px;display:flex;align-items:center;justify-content:center;font-size:120px;font-weight:900;color:rgba(255,255,255,0.9);text-shadow:0 8px 0 rgba(0,0,0,0.25);">2</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+            <div style="font-size:34px;">👑</div>
+            <div style="font-size:48px;font-weight:900;text-align:center;line-height:1.1;text-shadow:0 0 20px rgba(252,214,17,0.5);">צמד הגולן</div>
+            <div dir="ltr" style="font-size:40px;font-weight:900;color:#FCD611;">44</div>
+            <div style="width:300px;height:330px;position:relative;">
+              <div style="position:absolute;left:0;right:0;top:0;height:34px;background:#FFF1A8;border-radius:14px 14px 0 0;transform:translateY(-28px) scaleY(.85);transform-origin:bottom;"></div>
+              <div style="position:absolute;left:0;right:0;top:4px;bottom:0;background:linear-gradient(180deg,#FCD611,#D9B400);border-radius:6px 6px 16px 16px;display:flex;align-items:center;justify-content:center;font-size:150px;font-weight:900;color:#3A2508;text-shadow:0 8px 0 rgba(0,0,0,0.15);box-shadow:0 0 80px rgba(252,214,17,0.5);">1</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+            <div style="font-size:40px;font-weight:900;text-align:center;line-height:1.1;">נועה ויעל</div>
+            <div dir="ltr" style="font-size:34px;font-weight:800;color:#C7ABD4;">27</div>
+            <div style="width:260px;height:160px;position:relative;">
+              <div style="position:absolute;left:0;right:0;top:0;height:34px;background:#C7ABD4;border-radius:14px 14px 0 0;transform:translateY(-28px) scaleY(.85);transform-origin:bottom;box-shadow:inset 0 -6px 0 rgba(0,0,0,0.1);"></div>
+              <div style="position:absolute;left:0;right:0;top:4px;bottom:0;background:linear-gradient(180deg,#8A5CA8,#5A2578);border-radius:6px 6px 16px 16px;display:flex;align-items:center;justify-content:center;font-size:110px;font-weight:900;color:rgba(255,255,255,0.9);text-shadow:0 8px 0 rgba(0,0,0,0.25);">3</div>
+            </div>
+          </div>
+        </div>
+        <div style="width:100%;height:22px;border-radius:0 0 20px 20px;background:linear-gradient(180deg,#2E1444,#1F0E2E);box-shadow:0 20px 50px rgba(0,0,0,0.5);"></div>
+      </div>
+      <div style="width:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;background:rgba(77,42,109,0.55);border:1px solid rgba(199,171,212,0.3);border-radius:40px;padding:44px 40px;position:relative;z-index:2;">
+        <div style="width:150px;height:150px;border-radius:50%;background:linear-gradient(180deg,#8A3BB0,#702E91);display:flex;align-items:center;justify-content:center;font-size:72px;box-shadow:0 0 50px rgba(168,85,214,0.6);">📄</div>
+        <div style="font-size:36px;line-height:1.4;font-weight:800;text-align:center;text-wrap:pretty;">קובץ הסיכום המלא של כל שיתופי הפעולה שנוצרו הערב זמין עכשיו להורדה בטלפון שלכם!</div>
+        <div style="height:1px;width:100%;background:rgba(199,171,212,0.25);"></div>
+        <button style="height:76px;padding:0 36px;border-radius:22px;border:1px solid #FCD611;background:#FCD611;color:#3A2508;font-size:28px;font-weight:900;cursor:pointer;box-shadow:0 0 34px rgba(252,214,17,0.45);display:flex;align-items:center;gap:14px;">📄 ייצא קובץ סיכום</button>
+        <div style="font-size:18px;color:#C7ABD4;font-weight:700;">למנחה בלבד</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  qr(seed) {
+    const N = 25, cells = [];
+    let s = seed;
+    const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+    const finder = (x, y) => { const fx = x < 7 && y < 7, fy = x >= N - 7 && y < 7, fz = x < 7 && y >= N - 7; if (!(fx || fy || fz)) return null; const lx = fx || fz ? x : x - (N - 7), ly = fx || fy ? y : y - (N - 7); const ring = lx === 0 || lx === 6 || ly === 0 || ly === 6, core = lx >= 2 && lx <= 4 && ly >= 2 && ly <= 4; return ring || core; };
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const f = finder(x, y); const on = f !== null ? f : (x === 6 || y === 6) ? (x + y) % 2 === 0 : rnd() > 0.52; cells.push({ bg: on ? '#2A1638' : '#fff' }); }
+    return cells;
+  }
+  renderVals() {
+    const names = ['צמד הגולן', 'שירה ועומר', 'נועה ויעל', 'הדבש והדגים', 'מירב ורון', 'צפת מתחברת', 'אבי ודנה', 'קייקים ויין', 'הצמד מהחולה', 'לי ותום', 'גינוסר', 'מיכל ואורי', 'ראש פינה', 'טל ואלון'];
+    const scores = [44, 31, 27, 24, 22, 19, 17, 15, 12, 9];
+    const board = scores.map((sc, i) => {
+      const lead = i === 0, up = i === 2, down = i === 6;
+      return { rank: i + 1, name: names[i], score: sc, width: `${Math.round(sc / 44 * 100)}%`,
+        rankColor: lead ? '#FCD611' : '#C7ABD4', scoreColor: lead ? '#FCD611' : '#fff',
+        barBg: lead ? 'linear-gradient(90deg,#D9B400,#FCD611)' : up ? 'linear-gradient(90deg,#4FBF87,#00FF87)' : down ? 'linear-gradient(90deg,#B3003C,#FF0055)' : 'linear-gradient(90deg,#702E91,#A855D6)',
+        barGlow: lead ? '0 0 30px rgba(252,214,17,0.55)' : up ? '0 0 30px rgba(0,255,135,0.55)' : down ? '0 0 30px rgba(255,0,85,0.55)' : '0 0 18px rgba(168,85,214,0.35)',
+        lift: up ? 'translateY(-14px)' : down ? 'translateY(10px) scale(.98)' : 'none',
+        hasDelta: up || down, delta: up ? '+2' : '-2', deltaColor: up ? '#00FF87' : '#FF0055' };
+    });
+    const C = 2 * Math.PI * 98, frac = 24 / 60;
+    const v5 = 23, v2 = 11, vn = 4, tot = v5 + v2 + vn;
+    const pct5 = Math.round(v5 / tot * 100), pct2 = Math.round(v2 / tot * 100), pctN = 100 - pct5 - pct2;
+    const weighted = ((v5 * 5 + v2 * 2 - vn * 2) / tot).toFixed(1);
+    const colors = ['#FCD611', '#A855D6', '#C7ABD4', '#702E91', '#FFF1A8'];
+    const confetti = Array.from({ length: 48 }, (_, i) => ({ left: `${(i * 37) % 100}%`, w: `${10 + (i % 4) * 4}px`, h: `${14 + (i % 3) * 6}px`, bg: colors[i % colors.length], r: i % 3 === 0 ? '50%' : '3px', dur: `${5 + (i % 5) * 0.9}s`, delay: `-${(i * 0.37) % 6}s` }));
+    return {
+      qr: this.qr(42), qr2: this.qr(7), teamCount: 14,
+      lobbyTeams: names.map((n, i) => ({ name: n, delay: `${i * 0.12}s` })),
+      board, bigDash: `${(C * frac).toFixed(1)} ${(C * (1 - frac)).toFixed(1)}`,
+      votesTotal: tot, weighted, pct5, pct2, pctN, confetti
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#1F1130;}
+a{color:#C7ABD4;} a:hover{color:#FCD611;}
+input,textarea,button{font-family:Rubik,Heebo,sans-serif;}
+@keyframes floatUp{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-52px);opacity:0}}
+@keyframes lifeFade{0%{opacity:1;transform:scale(1)}60%{opacity:.25;transform:scale(1.3)}100%{opacity:.22;transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.08);opacity:1}}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes dots{0%{opacity:.2}30%{opacity:1}100%{opacity:.2}}
+@keyframes popIn{0%{transform:translateY(24px) scale(.96);opacity:0}100%{transform:none;opacity:1}}
+@keyframes cardIn{0%{transform:translateX(-30px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes cardOutUp{0%{transform:none;opacity:1}100%{transform:translateY(-26px);opacity:0}}
+@keyframes cardInUp{0%{transform:translateY(30px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes splashLogo{0%{transform:scale(.55);opacity:0}22%{transform:scale(1.06);opacity:1}62%{transform:scale(1);opacity:1}100%{transform:scale(1.6);opacity:0}}
+@keyframes splashGlow{0%{opacity:0}30%{opacity:.9}100%{opacity:0}}
+@keyframes splashOut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes countPop{0%{transform:scale(.4);opacity:0}25%{transform:scale(1.05);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(1.35);opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+</style>
+</helmet>
+<div dir="rtl" style="min-height:100vh;padding:40px 32px;font-family:Rubik,Heebo,sans-serif;color:#fff;background:#1F1130;display:flex;justify-content:center;align-items:flex-start;gap:40px;flex-wrap:wrap;">
+
+  <!-- Phone -->
+  <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);display:flex;flex-direction:column;">
+    <img src="assets/logo.png" alt="" style="position:absolute;top:20px;left:20px;height:22px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:{{ cornerLogoOpacity }};z-index:3;transition:opacity .3s;">
+    <sc-if value="{{ showSplash }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:0;z-index:20;background:radial-gradient(circle at 50% 45%,#7B3BA6 0%,#41205F 55%,#2C1442 100%);display:flex;align-items:center;justify-content:center;animation:splashOut .5s ease-in 1.5s forwards;">
+      <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(252,214,17,0.35) 0%,rgba(252,214,17,0) 65%);animation:splashGlow 1.6s ease-out;"></div>
+      <img src="assets/logo-vertical.svg" alt="" style="width:200px;animation:splashLogo 1.9s cubic-bezier(.2,.8,.2,1) forwards;">
+    </div>
+    </sc-if>
+
+    <!-- Onboarding / Waiting -->
+    <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:0 26px 34px;">
+      <img src="assets/logo-vertical.svg" alt="" style="margin:44px auto 22px;display:block;width:210px;">
+      <div style="text-align:center;display:flex;flex-direction:column;gap:2px;">
+        <div style="font-size:46px;line-height:1.05;font-weight:900;color:#fff;text-shadow:0 0 6px #A855D6,0 0 20px #A855D6,0 0 48px #702E91;">מחולל<br>השתפ"ים</div>
+        <div style="font-size:18px;font-weight:700;color:#C7ABD4;margin-top:10px;">של הבית לעסקים גליל מזרחי</div>
+      </div>
+      <sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:64px;display:flex;flex-direction:column;gap:18px;">
+          <label style="display:flex;flex-direction:column;gap:8px;"><span style="font-size:14px;font-weight:700;color:#C7ABD4;">שם הקבוצה / הצמד</span><input value="{{ teamInput }}" onChange="{{ onTeam }}" style="height:54px;border-radius:16px;border:1px solid rgba(199,171,212,0.35);background:#4D2A6D;color:#fff;font-size:18px;padding:0 18px;outline:none;" style-focus="border-color:#A855D6;box-shadow:0 0 0 3px rgba(168,85,214,0.25);"></label>
+        </div>
+        <div style="flex:1;"></div>
+        <button onClick="{{ register }}" disabled="{{ cantRegister }}" style="height:64px;border-radius:20px;border:1px solid #A855D6;background:linear-gradient(180deg,#8A3BB0,#702E91);color:#fff;font-size:20px;font-weight:800;box-shadow:0 0 24px rgba(168,85,214,0.55),0 10px 30px rgba(0,0,0,0.4);cursor:pointer;opacity:{{ registerOpacity }};transition:opacity .2s;" style-active="transform:scale(.98);">נכנסים למשחק 🚀</button>
+      </sc-if>
+      <sc-if value="{{ isWaiting }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;animation:popIn .5s ease-out;">
+          <div style="position:relative;width:150px;height:150px;display:flex;align-items:center;justify-content:center;">
+            <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(168,85,214,0.7);box-shadow:0 0 30px rgba(168,85,214,0.5);animation:pulse 2.2s ease-in-out infinite;"></div>
+            <div style="position:absolute;inset:22px;border-radius:50%;border:1px solid rgba(199,171,212,0.35);animation:pulse 2.2s ease-in-out infinite .5s;"></div>
+            <div style="font-size:54px;">🤝</div>
+          </div>
+          <div style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.3);border-radius:22px;padding:22px 24px;text-align:center;font-size:19px;line-height:1.55;font-weight:700;text-wrap:pretty;">נרשמתם בהצלחה!<br>המשחק יתחיל מיד ברגע שהמנחה יזניק...</div>
+          <div style="display:flex;gap:8px;" dir="ltr"><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite;"></span><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite .2s;"></span><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite .4s;"></span></div>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#C7ABD4;font-weight:700;">{{ teamName }}</div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <!-- Game board -->
+    <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;padding:0 20px 28px;">
+      <div style="margin-top:56px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;">
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+          <div style="display:flex;gap:4px;font-size:22px;line-height:1;">
+            <sc-for list="{{ lifelines }}" as="l" hint-placeholder-count="3"><span style="display:inline-block;opacity:{{ l.opacity }};filter:{{ l.filter }};animation:{{ l.anim }};transition:opacity .4s;">🛟</span></sc-for>
+          </div>
+          <div style="font-size:11px;font-weight:700;color:#FCD611;letter-spacing:.5px;">חבלי הצלה</div>
+        </div>
+        <div style="position:relative;width:76px;height:76px;">
+          <svg width="76" height="76" viewBox="0 0 76 76" style="transform:rotate(-90deg) scaleY(-1);display:block;">
+            <circle cx="38" cy="38" r="33" style="fill:none;stroke:rgba(199,171,212,0.18);stroke-width:6;"></circle>
+            <circle cx="38" cy="38" r="33" style="fill:none;stroke:{{ timerColor }};stroke-width:6;stroke-linecap:round;stroke-dasharray:{{ timerDash }};filter:drop-shadow(0 0 6px {{ timerColor }});animation:{{ timerAnim }};transition:stroke-dasharray 1s linear,stroke .4s;"></circle>
+          </svg>
+          <div dir="ltr" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;color:#fff;letter-spacing:-0.5px;">{{ timerLabel }}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;position:relative;">
+          <div style="font-size:15px;font-weight:800;color:#fff;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;">{{ teamName }}</div>
+          <div style="font-size:13px;font-weight:800;color:{{ badgeText }};background:{{ badgeBg }};border:1px solid {{ badgeBorder }};box-shadow:{{ badgeGlow }};border-radius:999px;padding:4px 12px;white-space:nowrap;transition:all .3s;animation:{{ badgeAnim }};"><span dir="ltr">{{ score }}</span> נק'</div>
+          <sc-if value="{{ hasFloat }}" hint-placeholder-val="{{ false }}">
+            <div dir="ltr" style="position:absolute;left:0;bottom:22px;font-size:28px;font-weight:900;color:{{ floatColor }};text-shadow:0 0 14px {{ floatColor }};animation:floatUp 1.5s ease-out forwards;pointer-events:none;">{{ floatText }}</div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:14px;">
+        <div key="{{ keyA }}" style="background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.28);border-radius:24px;padding:22px 20px;display:flex;gap:14px;align-items:stretch;box-shadow:0 0 0 1px rgba(112,46,145,0.25),0 16px 40px rgba(0,0,0,0.35);animation:{{ cardAnimA }};">
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+            <div style="font-size:30px;line-height:1.15;font-weight:900;color:#fff;">{{ bizA.name }}</div>
+            <div style="font-size:15px;line-height:1.45;color:#C7ABD4;">{{ bizA.desc }}</div>
+          </div>
+          <button onClick="{{ swapA }}" disabled="{{ noLifelines }}" style="width:74px;border-radius:16px;border:1px solid rgba(252,214,17,0.5);background:rgba(252,214,17,0.08);color:#FCD611;font-size:11px;font-weight:700;line-height:1.3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 4px;cursor:pointer;opacity:{{ swapOpacity }};" style-active="background:rgba(252,214,17,0.25);"><span style="font-size:22px;">🛟</span>החלף עסק זה</button>
+        </div>
+        <div key="{{ connKey }}" style="display:flex;align-items:center;gap:10px;padding:8px 24px;animation:{{ connAnim }};">
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,214,0.7));"></div>
+          <div style="width:44px;height:34px;border-radius:50%;background:#702E91;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 22px rgba(168,85,214,0.6);">🤝</div>
+          <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(168,85,214,0.7),transparent);"></div>
+        </div>
+        <div key="{{ keyB }}" style="background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.28);border-radius:24px;padding:22px 20px;display:flex;gap:14px;align-items:stretch;box-shadow:0 0 0 1px rgba(112,46,145,0.25),0 16px 40px rgba(0,0,0,0.35);animation:{{ cardAnimB }};">
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+            <div style="font-size:30px;line-height:1.15;font-weight:900;color:#fff;">{{ bizB.name }}</div>
+            <div style="font-size:15px;line-height:1.45;color:#C7ABD4;">{{ bizB.desc }}</div>
+          </div>
+          <button onClick="{{ swapB }}" disabled="{{ noLifelines }}" style="width:74px;border-radius:16px;border:1px solid rgba(252,214,17,0.5);background:rgba(252,214,17,0.08);color:#FCD611;font-size:11px;font-weight:700;line-height:1.3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 4px;cursor:pointer;opacity:{{ swapOpacity }};" style-active="background:rgba(252,214,17,0.25);"><span style="font-size:22px;">🛟</span>החלף עסק זה</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <button onClick="{{ sayYes }}" style="height:76px;border-radius:20px;border:none;background:#00FF87;color:#0B0510;font-size:17px;font-weight:900;line-height:1.25;box-shadow:0 0 26px rgba(0,255,135,0.45),0 10px 24px rgba(0,0,0,0.4);cursor:pointer;padding:0 10px;" style-active="transform:scale(.97);">יש פוטנציאל! 🟩</button>
+        <button onClick="{{ sayNo }}" style="height:76px;border-radius:20px;border:none;background:#FF0055;color:#fff;font-size:17px;font-weight:800;line-height:1.25;box-shadow:0 0 26px rgba(255,0,85,0.45),0 10px 24px rgba(0,0,0,0.4);cursor:pointer;padding:0 10px;" style-active="transform:scale(.97);">אין סיכוי לשת"פ ❌</button>
+      </div>
+    </div>
+    <!-- Argument modal -->
+    <sc-if value="{{ showModal }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;z-index:5;backdrop-filter:blur(7px);background:rgba(45,20,68,0.55);"></div>
+      <div style="position:absolute;top:56px;left:0;right:0;z-index:6;display:flex;justify-content:center;">
+        <div style="position:relative;width:76px;height:76px;">
+          <svg width="76" height="76" viewBox="0 0 76 76" style="transform:rotate(-90deg) scaleY(-1);display:block;">
+            <circle cx="38" cy="38" r="33" style="fill:none;stroke:rgba(199,171,212,0.25);stroke-width:6;"></circle>
+            <circle cx="38" cy="38" r="33" style="fill:none;stroke:#C7ABD4;stroke-width:6;stroke-linecap:round;stroke-dasharray:{{ timerDash }};"></circle>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;color:#C7ABD4;">⏸</div>
+        </div>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:0;z-index:6;background:linear-gradient(180deg,#61337F,#4B2769);border-top:1px solid rgba(168,85,214,0.6);border-radius:34px 34px 44px 44px;padding:26px 24px 30px;display:flex;flex-direction:column;gap:18px;box-shadow:0 -20px 60px rgba(112,46,145,0.35);animation:popIn .35s ease-out;">
+        <div style="width:44px;height:5px;border-radius:3px;background:rgba(199,171,212,0.4);margin:0 auto;"></div>
+        <div style="font-size:24px;line-height:1.3;font-weight:900;text-align:center;text-shadow:0 0 14px rgba(168,85,214,0.6);text-wrap:pretty;">הטיימר נעצר!<br>למה זה שידוך מנצח?</div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+          <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:800;">{{ bizA.name }}</span>
+          <span style="font-size:20px;">🤝</span>
+          <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:800;">{{ bizB.name }}</span>
+        </div>
+        <div style="position:relative;">
+          <textarea value="{{ argText }}" onChange="{{ onArg }}" maxLength="120" rows="4" autoFocus="{{ true }}" style="width:100%;box-sizing:border-box;resize:none;border-radius:18px;border:1px solid #A855D6;background:#2F1748;padding:16px 18px 34px;font-size:17px;line-height:1.55;color:#fff;box-shadow:0 0 0 3px rgba(168,85,214,0.2);outline:none;"></textarea>
+          <div dir="ltr" style="position:absolute;bottom:12px;left:16px;font-size:13px;font-weight:700;color:{{ counterColor }};">{{ argLen }}/120</div>
+        </div>
+        <button onClick="{{ submitArg }}" disabled="{{ cantSubmit }}" style="height:64px;border-radius:20px;border:1px solid #A855D6;background:linear-gradient(180deg,#8A3BB0,#702E91);color:#fff;font-size:19px;font-weight:800;box-shadow:0 0 24px rgba(168,85,214,0.55);cursor:pointer;opacity:{{ submitOpacity }};transition:opacity .2s;" style-active="transform:scale(.98);">אישור ושליחה (+2 נקודות) 🚀</button>
+      </div>
+    </sc-if>
+    </sc-if>
+
+    <!-- 3-2-1 countdown -->
+    <sc-if value="{{ isCountdown }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:8;background:radial-gradient(circle at 50% 45%,rgba(112,46,145,0.85) 0%,rgba(41,32,95,0) 70%),rgba(45,20,68,0.82);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;">
+      <div style="font-size:20px;font-weight:800;color:#C7ABD4;letter-spacing:2px;">מתחילים בעוד</div>
+      <div dir="{{ countDir }}" key="{{ countLabel }}" style="font-size:170px;line-height:1;font-weight:900;color:#FCD611;text-shadow:0 0 24px rgba(252,214,17,0.7),0 0 70px rgba(252,214,17,0.35);animation:countPop .9s ease-out;">{{ countLabel }}</div>
+      <div style="font-size:18px;font-weight:700;color:#fff;">{{ teamName }}</div>
+    </div>
+    </sc-if>
+
+    <!-- Round ended, waiting for judging -->
+    <sc-if value="{{ isEnded }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;padding:0 30px 40px;animation:popIn .45s ease-out;">
+      <div style="position:relative;width:170px;height:170px;display:flex;align-items:center;justify-content:center;">
+        <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(252,214,17,0.6);box-shadow:0 0 34px rgba(252,214,17,0.35);animation:pulse 2.4s ease-in-out infinite;"></div>
+        <div style="position:absolute;inset:26px;border-radius:50%;border:1px solid rgba(199,171,212,0.35);animation:pulse 2.4s ease-in-out infinite .6s;"></div>
+        <div style="font-size:58px;">⏱</div>
+      </div>
+      <div style="text-align:center;display:flex;flex-direction:column;gap:14px;">
+        <div style="font-size:30px;font-weight:900;color:#FCD611;text-shadow:0 0 18px rgba(252,214,17,0.5);">הסבב הסתיים!</div>
+        <div style="font-size:18px;line-height:1.6;color:#C7ABD4;text-wrap:pretty;">שלחתם את כל השידוכים שלכם.<br>ממתינים שהמנחה יפתח את שלב הדירוג וההצבעות — עיניים על המסך הגדול!</div>
+      </div>
+      <div style="display:flex;gap:8px;" dir="ltr"><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite;"></span><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite .2s;"></span><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite .4s;"></span></div>
+      <div style="display:flex;align-items:center;gap:22px;background:#4D2A6D;border:1px solid rgba(199,171,212,0.3);border-radius:20px;padding:16px 24px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><span dir="ltr" style="font-size:24px;font-weight:900;color:#fff;">{{ matchesCount }}</span><span style="font-size:12px;font-weight:700;color:#C7ABD4;">שידוכים</span></div>
+        <div style="width:1px;height:34px;background:rgba(199,171,212,0.25);"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><span dir="ltr" style="font-size:24px;font-weight:900;color:#FCD611;">{{ score }}</span><span style="font-size:12px;font-weight:700;color:#C7ABD4;">נקודות</span></div>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Voting: other team -->
+    <sc-if value="{{ isVoteOther }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;min-height:0;display:flex;flex-direction:column;padding:0 22px 26px;animation:popIn .4s ease-out;">
+      <div style="margin-top:64px;font-size:22px;font-weight:900;text-align:center;line-height:1.3;">העריכו את השידוך המוצג על הלוח:</div>
+      <div style="flex:1;min-height:0;overflow-y:auto;margin-top:18px;padding-bottom:4px;">
+        <div style="background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.28);border-radius:24px;padding:22px 20px;display:flex;flex-direction:column;gap:16px;box-shadow:0 0 0 1px rgba(112,46,145,0.25),0 16px 40px rgba(0,0,0,0.35);">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;">
+            <div style="display:flex;flex-direction:column;gap:4px;"><div style="font-size:22px;font-weight:900;line-height:1.2;">{{ other.a }}</div><div style="font-size:14px;line-height:1.4;color:#C7ABD4;">{{ other.descA }}</div></div>
+            <div style="width:42px;height:42px;border-radius:50%;background:#702E91;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 18px rgba(168,85,214,0.6);flex-shrink:0;">🤝</div>
+            <div style="display:flex;flex-direction:column;gap:4px;"><div style="font-size:22px;font-weight:900;line-height:1.2;">{{ other.b }}</div><div style="font-size:14px;line-height:1.4;color:#C7ABD4;">{{ other.descB }}</div></div>
+          </div>
+          <div style="height:1px;background:rgba(199,171,212,0.2);"></div>
+          <div style="font-size:16px;line-height:1.6;color:#C7ABD4;text-wrap:pretty;">"{{ other.arg }}"</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;padding-top:14px;">
+        <sc-if value="{{ voted }}" hint-placeholder-val="{{ false }}">
+          <div style="align-self:center;margin-bottom:6px;background:rgba(252,214,17,0.1);border:1px solid #FCD611;color:#FCD611;border-radius:999px;padding:12px 26px;font-size:18px;font-weight:900;box-shadow:0 0 24px rgba(252,214,17,0.35);animation:popIn .3s ease-out;">הצבעתך נקלטה!</div>
+        </sc-if>
+        <button onClick="{{ vote5 }}" disabled="{{ voted }}" style="height:62px;border-radius:18px;border:1px solid rgba(123,215,168,0.6);background:#7BD7A8;color:#123324;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:{{ v5Glow }};cursor:pointer;opacity:{{ v5Op }};filter:{{ v5Filter }};transition:all .3s;" style-active="transform:scale(.97);"><span style="font-size:22px;">💡</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:18px;font-weight:900;">איזו הברקה!</span><span style="font-size:12px;font-weight:700;opacity:.8;">(+5 נקודות)</span></span></button>
+        <button onClick="{{ vote2 }}" disabled="{{ voted }}" style="height:62px;border-radius:18px;border:1px solid rgba(240,193,119,0.6);background:#F0C177;color:#3A2508;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:{{ v2Glow }};cursor:pointer;opacity:{{ v2Op }};filter:{{ v2Filter }};transition:all .3s;" style-active="transform:scale(.97);"><span style="font-size:22px;">👍</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:18px;font-weight:900;">שווה לנסות</span><span style="font-size:12px;font-weight:700;opacity:.8;">(+2 נקודות)</span></span></button>
+        <button onClick="{{ voteNeg }}" disabled="{{ voted }}" style="height:62px;border-radius:18px;border:1px solid rgba(232,137,155,0.6);background:#E8899B;color:#3D0C18;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:{{ vnGlow }};cursor:pointer;opacity:{{ vnOp }};filter:{{ vnFilter }};transition:all .3s;" style-active="transform:scale(.97);"><span style="font-size:22px;">❌</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:18px;font-weight:900;">לא להמציא!</span><span style="font-size:12px;font-weight:700;opacity:.8;">(-2 נקודות)</span></span></button>
+      </div>
+    </div>
+    </sc-if>
+
+    <!-- Game over: summary download -->
+    <sc-if value="{{ isSummary }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:0 28px 40px;animation:popIn .45s ease-out;">
+      <div style="position:relative;width:170px;height:170px;display:flex;align-items:center;justify-content:center;">
+        <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(252,214,17,0.6);box-shadow:0 0 34px rgba(252,214,17,0.35);animation:pulse 2.4s ease-in-out infinite;"></div>
+        <div style="position:absolute;inset:30px;border-radius:50%;background:linear-gradient(180deg,#8A3BB0,#702E91);box-shadow:0 0 30px rgba(168,85,214,0.6);display:flex;align-items:center;justify-content:center;font-size:52px;">📄</div>
+      </div>
+      <div style="text-align:center;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:30px;font-weight:900;color:#FCD611;text-shadow:0 0 18px rgba(252,214,17,0.5);">המשחק הסתיים! 🌟</div>
+        <div style="font-size:17px;line-height:1.6;color:#C7ABD4;text-wrap:pretty;">קובץ הסיכום המלא של כל שיתופי הפעולה שנוצרו הערב מחכה לכם כאן.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:22px;background:#4D2A6D;border:1px solid rgba(199,171,212,0.3);border-radius:20px;padding:14px 24px;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><span dir="ltr" style="font-size:24px;font-weight:900;color:#fff;">{{ matchesCount }}</span><span style="font-size:12px;font-weight:700;color:#C7ABD4;">שידוכים</span></div>
+        <div style="width:1px;height:34px;background:rgba(199,171,212,0.25);"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><span dir="ltr" style="font-size:24px;font-weight:900;color:#FCD611;">{{ score }}</span><span style="font-size:12px;font-weight:700;color:#C7ABD4;">נקודות</span></div>
+      </div>
+      <button onClick="{{ download }}" style="width:100%;height:64px;border-radius:20px;border:1px solid #FCD611;background:#FCD611;color:#3A2508;font-size:19px;font-weight:900;box-shadow:0 0 28px rgba(252,214,17,0.45);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;" style-active="transform:scale(.98);">📄 הורדת קובץ הסיכום</button>
+      <sc-if value="{{ downloaded }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:15px;font-weight:800;color:#7BD7A8;animation:popIn .3s ease-out;">הקובץ בדרך אליכם ✓</div>
+      </sc-if>
+    </div>
+    </sc-if>
+
+    <!-- Voting: own match -->
+    <sc-if value="{{ isVoteOwn }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:0 30px 40px;animation:popIn .4s ease-out;position:relative;">
+      <div style="position:absolute;top:56px;left:20px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <div style="font-size:13px;font-weight:800;color:{{ badgeText }};background:{{ badgeBg }};border:1px solid {{ badgeBorder }};box-shadow:{{ badgeGlow }};border-radius:999px;padding:4px 12px;white-space:nowrap;transition:all .3s;"><span dir="ltr">{{ score }}</span> נק'</div>
+        <sc-if value="{{ hasFloat }}" hint-placeholder-val="{{ false }}">
+          <div dir="ltr" style="position:absolute;left:0;top:-6px;font-size:28px;font-weight:900;color:{{ floatColor }};text-shadow:0 0 14px {{ floatColor }};animation:floatUp 1.5s ease-out forwards;pointer-events:none;">{{ floatText }}</div>
+        </sc-if>
+      </div>
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
+        <div style="position:relative;width:280px;height:280px;display:flex;align-items:center;justify-content:center;">
+          <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(112,46,145,0.55) 0%,rgba(112,46,145,0) 70%);"></div>
+          <div style="position:absolute;inset:18px;border-radius:50%;border:2px solid rgba(168,85,214,0.55);animation:pulse 2.6s ease-in-out infinite;"></div>
+          <div style="position:absolute;inset:52px;border-radius:50%;border:1px solid rgba(199,171,212,0.35);animation:pulse 2.6s ease-in-out infinite .6s;"></div>
+          <div style="position:absolute;inset:86px;border-radius:50%;background:linear-gradient(180deg,#8A3BB0,#702E91);box-shadow:0 0 40px rgba(168,85,214,0.7);display:flex;align-items:center;justify-content:center;font-size:56px;">🤝</div>
+          <div style="position:absolute;top:26px;right:44px;color:#FCD611;font-size:26px;text-shadow:0 0 12px #FCD611;animation:flash 1.6s infinite;">✦</div>
+          <div style="position:absolute;bottom:38px;left:30px;color:#FCD611;font-size:18px;text-shadow:0 0 12px #FCD611;animation:flash 1.6s infinite .5s;">✦</div>
+          <div style="position:absolute;top:70px;left:14px;color:#FCD611;font-size:14px;text-shadow:0 0 10px #FCD611;animation:flash 1.6s infinite 1s;">✦</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;text-align:center;margin-bottom:24px;">
+        <div style="font-size:32px;font-weight:900;color:#FCD611;text-shadow:0 0 18px rgba(252,214,17,0.55);">זה השידוך שלכם! 🌟</div>
+        <div style="font-size:18px;line-height:1.6;color:#C7ABD4;text-wrap:pretty;">השופטים והמשתתפים באולם מצביעים כעת על הרעיון שלכם. החזיקו אצבעות!</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+        <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:800;">{{ own.a }}</span>
+        <span style="font-size:16px;">🤝</span>
+        <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:800;">{{ own.b }}</span>
+      </div>
+    </div>
+    </sc-if>
+  </div>
+
+  <!-- Host simulation (outside the phone) -->
+  <div style="width:250px;display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:20px;background:#2A1740;border:1px solid rgba(199,171,212,0.2);margin-top:12px;">
+    <div style="font-size:12px;letter-spacing:2px;color:#C7ABD4;font-weight:700;">סימולציית מנחה</div>
+    <div style="font-size:13px;color:#C7ABD4;line-height:1.5;">מה שהמנחה עושה מהטאבלט. כאן רק כדי לבדוק את הזרימה.</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button onClick="{{ hostStart }}" disabled="{{ notWaiting }}" style="height:34px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ hostStartOp }};">הזנקת המשחק</button>
+      <button onClick="{{ addMinute }}" disabled="{{ notBoard }}" style="height:34px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ hostEndOp }};">⏳ הוסף דקה</button>
+      <button onClick="{{ hostEnd }}" disabled="{{ notBoard }}" style="height:34px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ hostEndOp }};">סיום הסבב</button>
+      <button onClick="{{ hostJudge }}" disabled="{{ notEnded }}" style="height:34px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ hostJudgeOp }};">מעבר לשלב השיפוט</button>
+      <button onClick="{{ hostOwn }}" disabled="{{ notPlaying }}" style="height:34px;border-radius:12px;border:1px solid rgba(168,85,214,0.7);background:rgba(112,46,145,0.4);color:#fff;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ hostOwnOp }};">הצגת השידוך שלנו על הלוח</button>
+      <button onClick="{{ hostFinish }}" disabled="{{ notInGame }}" style="height:34px;border-radius:12px;border:1px solid #FCD611;background:rgba(252,214,17,0.12);color:#FCD611;font-size:14px;font-weight:700;cursor:pointer;opacity:{{ hostFinishOp }};">סיום המשחק</button>
+      <button onClick="{{ hostReset }}" style="height:34px;border-radius:12px;border:1px solid rgba(199,171,212,0.35);background:transparent;color:#C7ABD4;font-size:14px;font-weight:700;cursor:pointer;">איפוס</button>
+    </div>
+    <div style="height:1px;background:rgba(199,171,212,0.2);"></div>
+    <div style="font-size:12px;color:#C7ABD4;line-height:1.7;">
+      <div>שידוכים שנשלחו: <span dir="ltr">{{ matchesCount }}</span></div>
+      <div>סבב: <span dir="ltr">{{ round }}</span></div>
+      <div>שלב: {{ phaseLabel }}</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;roundSeconds&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:60,&quot;min&quot;:15,&quot;max&quot;:180,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;משחק&quot;}}">
+class Component extends DCLogic {
+  BIZ = [
+    { name: 'מאפיית הגליל', desc: 'לחמי מחמצת ומאפים בטבריה' },
+    { name: 'סטודיו נועה', desc: 'מיתוג ועיצוב לעסקים קטנים בראש פינה' },
+    { name: 'חוות ריח הדבש', desc: 'דבש, פולן ומוצרי כוורת מהגולן' },
+    { name: 'צימרים בכפר בלום', desc: 'אירוח כפרי לזוגות ומשפחות' },
+    { name: 'יקב רמת הגולן הקטן', desc: 'יינות בוטיק וסיורי טעימות' },
+    { name: 'קייקי הירדן', desc: 'שייט, אקסטרים וימי גיבוש' },
+    { name: 'משתלת עמק החולה', desc: 'צמחים, עציצים וייעוץ גינון' },
+    { name: 'רואת חשבון מירב לוי', desc: 'הנהלת חשבונות לעצמאים בקריית שמונה' },
+    { name: 'מסעדת הדגים בגינוסר', desc: 'דגי כנרת ואוכל גלילי' },
+    { name: 'סטודיו ליוגה בצפת', desc: 'שיעורים, ריטריטים וסדנאות' },
+    { name: 'דוברות ותוכן – עומר', desc: 'ניהול רשתות חברתיות לעסקים' },
+    { name: 'צלמת אירועים – שירה', desc: 'צילום אירועים ותדמית בגליל' }
+  ];
+  OTHERS = [
+    { a: 'חוות ריח הדבש', b: 'צימרים בכפר בלום', arg: "מארז דבש מקומי בכל חדר בצ'ק-אין, עם קוד הנחה לביקור בחווה למחרת בבוקר" },
+    { a: 'קייקי הירדן', b: 'מסעדת הדגים בגינוסר', arg: 'חבילת יום: שייט בבוקר וארוחת דגים בצהריים במחיר משולב' },
+    { a: 'סטודיו ליוגה בצפת', b: 'משתלת עמק החולה', arg: 'ריטריט יוגה בין הצמחים במשתלה, וכל משתתף מקבל עציץ הביתה' }
+  ];
+  state = { splash: true, total: 60, phase: 'onboarding', count: 3, anim: 'in', animSide: 'both', p1: '', p2: '', teamInput: '', score: 0, secs: this.R, paused: false, lifelines: [false, false, false], fading: -1, pair: null, modal: false, argText: '', matches: [], float: null, badgeAnim: 'none', other: null, voted: false, otherIdx: 0, round: 1 };
+  timers = [];
+  get R() { return +(this.props.roundSeconds ?? 60); }
+  componentDidMount() {
+    this.setState({ pair: this.pickPair() });
+    this.later(() => this.setState({ splash: false }), 2100);
+    this.tick = setInterval(() => {
+      const s = this.state;
+      if (s.phase !== 'board' || s.modal || s.paused) return;
+      if (s.secs <= 1) { this.setState({ secs: 0 }); this.later(() => this.endRound(), 600); return; }
+      this.setState({ secs: s.secs - 1 });
+    }, 1000);
+  }
+  componentWillUnmount() { clearInterval(this.tick); this.timers.forEach(clearTimeout); }
+  later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  rnd(excl) { const pool = this.BIZ.filter(b => !excl.includes(b.name)); return pool[Math.floor(Math.random() * pool.length)]; }
+  pickPair() { const a = this.rnd([]); const b = this.rnd([a.name]); return { a, b }; }
+  addScore(delta) {
+    this.setState(s => ({ score: Math.max(0, s.score + delta), float: { text: (delta > 0 ? '+' : '−') + Math.abs(delta), color: delta > 0 ? '#00FF87' : '#FF0055', id: Date.now() }, badgeAnim: delta < 0 ? 'shake .4s' : 'none' }));
+    this.later(() => this.setState({ float: null, badgeAnim: 'none' }), 1500);
+  }
+  startGame() {
+    this.setState({ phase: 'countdown', count: 3, secs: this.R, total: this.R, pair: this.pickPair(), anim: 'in', animSide: 'both' });
+    [1,2,3].forEach(i => this.later(() => { if (this.state.phase === 'countdown') this.setState({ count: 3 - i }); }, i * 900));
+    this.later(() => { if (this.state.phase === 'countdown') this.setState({ phase: 'board', secs: this.R }); }, 3700);
+  }
+  changePair(next, side) {
+    this.setState({ anim: 'out', animSide: side });
+    this.later(() => this.setState({ pair: next, anim: 'in', animSide: side }), 240);
+  }
+  endRound() { this.setState({ phase: 'ended', modal: false }); }
+  goJudge() {
+    const idx = this.state.otherIdx % this.OTHERS.length;
+    this.setState({ phase: 'voteOther', other: this.OTHERS[idx], otherIdx: idx + 1, voted: false, modal: false });
+  }
+  goOwn() {
+    const m = this.state.matches[this.state.matches.length - 1] || { a: this.state.pair.a.name, b: this.state.pair.b.name };
+    this.setState({ phase: 'voteOwn', own: m, modal: false });
+    [[+5, 1400], [+2, 3000], [-2, 4600], [+5, 6200]].forEach(([d, t]) => this.later(() => { if (this.state.phase === 'voteOwn') this.addScore(d); }, t));
+    this.later(() => { if (this.state.phase === 'voteOwn') this.nextRound(); }, 8200);
+  }
+  nextRound() { this.setState(s => ({ round: s.round + 1, lifelines: [false, false, false] })); this.startGame(); }
+  renderVals() {
+    const s = this.state;
+    const pair = s.pair || { a: this.BIZ[0], b: this.BIZ[1] };
+    const teamName = s.teamInput.trim() || 'הצמד שלכם';
+    const mmss = `${Math.floor(s.secs / 60)}:${String(s.secs % 60).padStart(2, '0')}`;
+    const C = 2 * Math.PI * 33, frac = Math.min(1, s.secs / s.total);
+    const tc = s.secs > s.total / 2 ? '#00FF87' : s.secs > 10 ? '#FCD611' : '#FF0055';
+    const noLife = s.lifelines.every(Boolean);
+    const gain = s.float && s.float.color === '#00FF87', loss = s.float && s.float.color === '#FF0055';
+    const vOp = k => s.voted ? (s.votedKind === k ? 1 : 0.22) : 1;
+    const vGlow = (k, rgb) => s.voted ? (s.votedKind === k ? `0 0 0 3px rgba(${rgb},0.45)` : 'none') : `0 0 20px rgba(${rgb},0.4),0 8px 20px rgba(0,0,0,0.35)`;
+    const vFilter = k => s.voted && s.votedKind !== k ? 'saturate(0.4)' : 'none';
+    const phaseLabel = { onboarding: 'הרשמה', waiting: 'ממתינים', board: 'סבב חי', ended: 'הסבב הסתיים', summary: 'סיכום', voteOther: 'שיפוט', voteOwn: 'השידוך שלנו' }[s.phase];
+    const vote = k => { if (s.voted) return; this.setState({ voted: true, votedKind: k }); this.later(() => { if (this.state.phase === 'voteOther') this.goOwn(); }, 2200); };
+    const swap = side => {
+      if (noLife) return;
+      const i = s.lifelines.indexOf(false);
+      this.setState({ fading: i });
+      this.later(() => { const st = this.state; const ll = st.lifelines.slice(); ll[i] = true; const other = side === 'a' ? st.pair.b : st.pair.a; const nb = this.rnd([st.pair.a.name, st.pair.b.name]); this.setState({ lifelines: ll, fading: -1 }); this.changePair(side === 'a' ? { a: nb, b: other } : { a: other, b: nb }, side); }, 700);
+    };
+    return {
+      isIntro: s.phase === 'onboarding' || s.phase === 'waiting', isOnboarding: s.phase === 'onboarding', isWaiting: s.phase === 'waiting',
+      isBoard: s.phase === 'board' || s.phase === 'countdown', isCountdown: s.phase === 'countdown', countLabel: s.count > 0 ? s.count : 'צאו!', countDir: s.count > 0 ? 'ltr' : 'rtl', isEnded: s.phase === 'ended', isSummary: s.phase === 'summary', downloaded: !!s.downloaded, download: () => this.setState({ downloaded: true }), isVoteOther: s.phase === 'voteOther', isVoteOwn: s.phase === 'voteOwn',
+      p1: s.p1, p2: s.p2, teamInput: s.teamInput, teamName,
+      onP1: e => this.setState({ p1: e.target.value }), onP2: e => this.setState({ p2: e.target.value }), onTeam: e => this.setState({ teamInput: e.target.value }),
+      cantRegister: !s.teamInput.trim(), registerOpacity: s.teamInput.trim() ? 1 : 0.45,
+      register: () => { this.setState({ phase: 'waiting' }); this.later(() => { if (this.state.phase === 'waiting') this.startGame(); }, 4000); },
+      score: s.score, timerColor: tc, timerLabel: mmss, timerAnim: s.secs <= 10 && s.secs > 0 ? 'flash .7s infinite' : 'none',
+      timerDash: `${(C * frac).toFixed(1)} ${(C * (1 - frac)).toFixed(1)}`,
+      lifelines: s.lifelines.map((spent, i) => ({ opacity: spent ? 0.22 : 1, filter: spent ? 'grayscale(1)' : 'drop-shadow(0 0 6px rgba(252,214,17,0.7))', anim: s.fading === i ? 'lifeFade .9s ease-out forwards' : 'none' })),
+      noLifelines: noLife, swapOpacity: noLife ? 0.35 : 1, swapA: () => swap('a'), swapB: () => swap('b'),
+      bizA: pair.a, bizB: pair.b,
+      keyA: (s.anim === 'out' && (s.animSide === 'a' || s.animSide === 'both') ? 'out-' : 'in-') + pair.a.name,
+      keyB: (s.anim === 'out' && (s.animSide === 'b' || s.animSide === 'both') ? 'out-' : 'in-') + pair.b.name,
+      cardAnimA: (s.animSide === 'b' ? 'none' : (s.anim === 'out' ? 'cardOutUp .24s ease-in forwards' : 'cardInUp .34s ease-out')),
+      cardAnimB: (s.animSide === 'a' ? 'none' : (s.anim === 'out' ? 'cardOutUp .24s ease-in forwards' : 'cardInUp .34s ease-out')),
+      connKey: s.animSide === 'both' ? (s.anim === 'out' ? 'out-' : 'in-') + pair.a.name + pair.b.name : 'static',
+      connAnim: s.animSide === 'both' ? (s.anim === 'out' ? 'cardOutUp .24s ease-in forwards' : 'cardInUp .34s ease-out') : 'none',
+      badgeText: gain || loss ? '#fff' : '#C7ABD4', badgeBg: gain ? 'rgba(0,255,135,0.15)' : loss ? 'rgba(255,0,85,0.15)' : 'rgba(112,46,145,0.35)',
+      badgeBorder: gain ? '#00FF87' : loss ? '#FF0055' : 'rgba(168,85,214,0.6)', badgeGlow: gain ? '0 0 16px rgba(0,255,135,0.5)' : loss ? '0 0 16px rgba(255,0,85,0.5)' : 'none', badgeAnim: s.badgeAnim,
+      hasFloat: !!s.float, floatText: s.float ? s.float.text : '', floatColor: s.float ? s.float.color : '#fff',
+      sayYes: () => this.setState({ modal: true, argText: '' }),
+      sayNo: () => { this.changePair(this.pickPair(), 'both'); this.addScore(-2); },
+      showModal: s.modal, argText: s.argText, argLen: s.argText.length, counterColor: s.argText.length >= 110 ? '#FCD611' : '#C7ABD4',
+      onArg: e => this.setState({ argText: e.target.value.slice(0, 120) }),
+      cantSubmit: s.argText.trim().length < 3, submitOpacity: s.argText.trim().length < 3 ? 0.45 : 1,
+      submitArg: () => { if (s.argText.trim().length < 3) return; this.setState(st => ({ modal: false, matches: [...st.matches, { a: st.pair.a.name, b: st.pair.b.name, arg: st.argText }] })); this.changePair(this.pickPair(), 'both'); this.later(() => this.addScore(2), 250); },
+      other: (o => { const d = n => (this.BIZ.find(b => b.name === n) || {}).desc || ''; return { ...o, descA: d(o.a), descB: d(o.b) }; })(s.other || this.OTHERS[0]), voted: s.voted,
+      vote5: () => vote('5'), vote2: () => vote('2'), voteNeg: () => vote('n'),
+      v5Op: vOp('5'), v2Op: vOp('2'), vnOp: vOp('n'), v5Glow: vGlow('5', '123,215,168'), v2Glow: vGlow('2', '240,193,119'), vnGlow: vGlow('n', '232,137,155'), v5Filter: vFilter('5'), v2Filter: vFilter('2'), vnFilter: vFilter('n'),
+      own: s.own || { a: pair.a.name, b: pair.b.name },
+      hostStart: () => this.startGame(), notWaiting: s.phase !== 'waiting', hostStartOp: s.phase === 'waiting' ? 1 : 0.35,
+      addMinute: () => this.setState(st => ({ secs: st.secs + 60, total: st.total + 60 })),
+      hostEnd: () => this.endRound(), notBoard: s.phase !== 'board', hostEndOp: s.phase === 'board' ? 1 : 0.35,
+      hostJudge: () => this.goJudge(), notEnded: s.phase !== 'ended', hostJudgeOp: s.phase === 'ended' ? 1 : 0.35,
+      hostOwn: () => this.goOwn(), notPlaying: !(s.phase === 'board' || s.phase === 'ended'), hostOwnOp: (s.phase === 'board' || s.phase === 'ended') ? 1 : 0.35,
+      hostFinish: () => { this.timers.forEach(clearTimeout); this.timers = []; this.setState({ phase: 'summary', modal: false, downloaded: false }); }, notInGame: !['board','ended','voteOther','voteOwn'].includes(s.phase), hostFinishOp: ['board','ended','voteOther','voteOwn'].includes(s.phase) ? 1 : 0.35,
+      hostReset: () => { this.timers.forEach(clearTimeout); this.timers = []; this.setState({ phase: 'onboarding', downloaded: false, p1: '', p2: '', teamInput: '', score: 0, secs: this.R, lifelines: [false, false, false], fading: -1, pair: this.pickPair(), modal: false, argText: '', matches: [], float: null, voted: false, round: 1, otherIdx: 0 }); },
+      showSplash: s.splash,
+      cornerLogoOpacity: (s.phase === "onboarding" || s.phase === "waiting") ? 0 : 0.8,
+      matchesCount: s.matches.length, round: s.round, phaseLabel
+    };
+  }
+}
+</script>
+</body>
+</html>

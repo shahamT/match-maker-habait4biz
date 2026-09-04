@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#1F1130;}
+a{color:#C7ABD4;} a:hover{color:#FCD611;}
+@keyframes floatUp{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(-46px);opacity:0}}
+@keyframes lifeFade{0%{opacity:1;transform:scale(1)}60%{opacity:.25;transform:scale(1.25)}100%{opacity:.25;transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.08);opacity:1}}
+@keyframes flash{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes dots{0%{opacity:.2}30%{opacity:1}100%{opacity:.2}}
+</style>
+</helmet>
+<div dir="rtl" style="min-height:100vh;padding:48px 56px 96px;font-family:Rubik,Heebo,sans-serif;color:#fff;background:#1F1130;display:flex;flex-direction:column;gap:56px;">
+
+<section style="display:flex;flex-direction:column;gap:28px;">
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <div style="font-size:12px;letter-spacing:3px;color:#C7ABD4;font-weight:700;">סבב 1</div>
+    <h1 style="margin:0;font-size:30px;font-weight:900;">אפליקציית השחקנים · <span dir="ltr">390 × 844</span></h1>
+    <div style="font-size:14px;color:#C7ABD4;max-width:720px;line-height:1.6;text-wrap:pretty;">שישה מסכים ושלוש מיקרו-אינטראקציות. הלוגו יושב בפינה השמאלית-עליונה בכל מסך, שם המשחק בסגנון ניאון נפרד ממנו.</div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:44px;align-items:flex-start;">
+
+    <!-- 1a Onboarding -->
+    <div id="1a" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;"><a href="#1a" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1a</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 1 — הרשמה</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);display:flex;flex-direction:column;padding:0 26px 34px;">
+        <img src="assets/logo-vertical.svg" alt="" style="margin:44px auto 22px;display:block;width:210px;">
+        <div style="text-align:center;display:flex;flex-direction:column;gap:2px;">
+          <div style="font-size:46px;line-height:1.05;font-weight:900;color:#fff;text-shadow:0 0 6px #A855D6,0 0 20px #A855D6,0 0 48px #702E91;">מחולל<br>השתפ"ים</div>
+          <div style="font-size:18px;font-weight:700;color:#C7ABD4;margin-top:10px;">של הבית לעסקים גליל מזרחי</div>
+        </div>
+        <div style="margin-top:64px;display:flex;flex-direction:column;gap:18px;">
+          <label style="display:flex;flex-direction:column;gap:8px;"><span style="font-size:14px;font-weight:700;color:#C7ABD4;">שם הקבוצה / הצמד</span><input readOnly style="height:54px;border-radius:16px;border:1px solid rgba(199,171,212,0.35);background:#4D2A6D;color:#fff;font-size:18px;font-family:Rubik,sans-serif;padding:0 18px;outline:none;"></label>
+        </div>
+        <div style="flex:1;"></div>
+        <button style="height:64px;border-radius:20px;border:1px solid #A855D6;background:linear-gradient(180deg,#8A3BB0,#702E91);color:#fff;font-size:20px;font-weight:800;font-family:Rubik,sans-serif;box-shadow:0 0 24px rgba(168,85,214,0.55),0 10px 30px rgba(0,0,0,0.4);cursor:pointer;">נכנסים למשחק 🚀</button>
+      </div>
+    </div>
+
+    <!-- 1b Waiting -->
+    <div id="1b" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;"><a href="#1b" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1b</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 2 — ממתינים להזנקה</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);display:flex;flex-direction:column;padding:0 26px 34px;">
+        <img src="assets/logo-vertical.svg" alt="" style="margin:44px auto 22px;display:block;width:210px;">
+        <div style="text-align:center;display:flex;flex-direction:column;gap:2px;">
+          <div style="font-size:46px;line-height:1.05;font-weight:900;color:#fff;text-shadow:0 0 6px #A855D6,0 0 20px #A855D6,0 0 48px #702E91;">מחולל<br>השתפ"ים</div>
+          <div style="font-size:18px;font-weight:700;color:#C7ABD4;margin-top:10px;">של הבית לעסקים גליל מזרחי</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;">
+          <div style="position:relative;width:150px;height:150px;display:flex;align-items:center;justify-content:center;">
+            <div style="position:absolute;inset:0;border-radius:50%;border:2px solid rgba(168,85,214,0.7);box-shadow:0 0 30px rgba(168,85,214,0.5);animation:pulse 2.2s ease-in-out infinite;"></div>
+            <div style="position:absolute;inset:22px;border-radius:50%;border:1px solid rgba(199,171,212,0.35);animation:pulse 2.2s ease-in-out infinite .5s;"></div>
+            <div style="font-size:54px;">🤝</div>
+          </div>
+          <div style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.3);border-radius:22px;padding:22px 24px;text-align:center;font-size:19px;line-height:1.55;font-weight:700;text-wrap:pretty;box-shadow:0 0 0 1px rgba(112,46,145,0.3);">נרשמתם בהצלחה!<br>המשחק יתחיל מיד ברגע שהמנחה יזניק...</div>
+          <div style="display:flex;gap:8px;" dir="ltr"><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite;"></span><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite .2s;"></span><span style="width:8px;height:8px;border-radius:50%;background:#FCD611;animation:dots 1.2s infinite .4s;"></span></div>
+        </div>
+        <div style="text-align:center;font-size:14px;color:#C7ABD4;font-weight:700;">צמד הגולן</div>
+      </div>
+    </div>
+
+    <!-- 1c Main board -->
+    <div id="1c" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;"><a href="#1c" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #FCD611;color:#FCD611;font-family:Rubik,sans-serif;" dir="ltr">1c</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 3 — לוח המשחק (המסך המרכזי)</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);display:flex;flex-direction:column;padding:0 20px 28px;">
+        <img src="assets/logo.png" alt="" style="position:absolute;top:18px;left:20px;height:22px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.75;">
+        <div style="margin-top:56px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;">
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+            <div style="display:flex;gap:4px;font-size:22px;line-height:1;"><span style="filter:drop-shadow(0 0 6px rgba(252,214,17,0.7));">🛟</span><span style="filter:drop-shadow(0 0 6px rgba(252,214,17,0.7));">🛟</span><span style="opacity:0.22;filter:grayscale(1);">🛟</span></div>
+            <div style="font-size:11px;font-weight:700;color:#FCD611;letter-spacing:.5px;">חבלי הצלה</div>
+          </div>
+          <div style="position:relative;width:76px;height:76px;">
+            <svg width="76" height="76" viewBox="0 0 76 76" style="transform:rotate(-90deg) scaleY(-1);display:block;">
+              <circle cx="38" cy="38" r="33" style="fill:none;stroke:rgba(199,171,212,0.18);stroke-width:6;"></circle>
+              <circle cx="38" cy="38" r="33" style="fill:none;stroke:{{ timerColor }};stroke-width:6;stroke-linecap:round;stroke-dasharray:{{ timerDash }};filter:drop-shadow(0 0 6px {{ timerColor }});animation:{{ timerAnim }};"></circle>
+            </svg>
+            <div dir="ltr" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff;">{{ timerSeconds }}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <div style="font-size:15px;font-weight:800;color:#fff;white-space:nowrap;">צמד הגולן</div>
+            <div style="font-size:13px;font-weight:800;color:#C7ABD4;background:rgba(112,46,145,0.35);border:1px solid rgba(168,85,214,0.6);border-radius:999px;padding:4px 12px;white-space:nowrap;">12 נק'</div>
+          </div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:0;margin-top:14px;">
+          <div style="background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.28);border-radius:24px;padding:22px 20px;display:flex;gap:14px;align-items:stretch;box-shadow:0 0 0 1px rgba(112,46,145,0.25),0 16px 40px rgba(0,0,0,0.35);">
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+              <div style="font-size:30px;line-height:1.15;font-weight:900;color:#fff;">מאפיית הגליל</div>
+              <div style="font-size:15px;line-height:1.45;color:#C7ABD4;">לחמי מחמצת ומאפים בטבריה</div>
+            </div>
+            <button style="width:74px;border-radius:16px;border:1px solid rgba(252,214,17,0.5);background:rgba(252,214,17,0.08);color:#FCD611;font-family:Rubik,sans-serif;font-size:11px;font-weight:700;line-height:1.3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 4px;cursor:pointer;"><span style="font-size:22px;">🛟</span>החלף עסק זה</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 24px;">
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(168,85,214,0.7));"></div>
+            <div style="width:44px;height:34px;border-radius:50%;background:#702E91;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 22px rgba(168,85,214,0.6);">🤝</div>
+            <div style="flex:1;height:1px;background:linear-gradient(90deg,rgba(168,85,214,0.7),transparent);"></div>
+          </div>
+          <div style="background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.28);border-radius:24px;padding:22px 20px;display:flex;gap:14px;align-items:stretch;box-shadow:0 0 0 1px rgba(112,46,145,0.25),0 16px 40px rgba(0,0,0,0.35);">
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;justify-content:center;">
+              <div style="font-size:30px;line-height:1.15;font-weight:900;color:#fff;">סטודיו נועה</div>
+              <div style="font-size:15px;line-height:1.45;color:#C7ABD4;">מיתוג ועיצוב לעסקים קטנים בראש פינה</div>
+            </div>
+            <button style="width:74px;border-radius:16px;border:1px solid rgba(252,214,17,0.5);background:rgba(252,214,17,0.08);color:#FCD611;font-family:Rubik,sans-serif;font-size:11px;font-weight:700;line-height:1.3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 4px;cursor:pointer;"><span style="font-size:22px;">🛟</span>החלף עסק זה</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <button style="height:76px;border-radius:20px;border:none;background:#00FF87;color:#0B0510;font-family:Rubik,sans-serif;font-size:17px;font-weight:900;line-height:1.25;box-shadow:0 0 26px rgba(0,255,135,0.45),0 10px 24px rgba(0,0,0,0.4);cursor:pointer;padding:0 10px;">יש פוטנציאל! 🟩</button>
+          <button style="height:76px;border-radius:20px;border:none;background:#FF0055;color:#fff;font-family:Rubik,sans-serif;font-size:17px;font-weight:800;line-height:1.25;box-shadow:0 0 26px rgba(255,0,85,0.45),0 10px 24px rgba(0,0,0,0.4);cursor:pointer;padding:0 10px;">אין סיכוי לשת"פ ❌</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1d Argument modal -->
+    <div id="1d" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;"><a href="#1d" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1d</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 4 — נימוק השידוך (הטיימר מושהה)</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:0 20px 28px;filter:blur(7px);opacity:0.55;">
+          <div style="margin-top:56px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;">
+            <div style="display:flex;gap:4px;font-size:22px;"><span>🛟</span><span>🛟</span><span style="opacity:0.22;">🛟</span></div>
+            <div style="width:76px;height:76px;border-radius:50%;border:6px solid rgba(199,171,212,0.4);"></div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;"><div style="font-size:15px;font-weight:800;">צמד הגולן</div><div style="font-size:13px;color:#C7ABD4;border:1px solid rgba(168,85,214,0.6);border-radius:999px;padding:4px 12px;">12 נק'</div></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;margin-top:14px;">
+            <div style="height:120px;border-radius:24px;background:#532C74;border:1px solid rgba(199,171,212,0.28);"></div>
+            <div style="height:120px;border-radius:24px;background:#532C74;border:1px solid rgba(199,171,212,0.28);"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"><div style="height:76px;border-radius:20px;background:#00FF87;"></div><div style="height:76px;border-radius:20px;background:#FF0055;"></div></div>
+        </div>
+        <div style="position:absolute;inset:0;background:rgba(45,20,68,0.45);"></div>
+        <div style="position:absolute;top:56px;left:0;right:0;display:flex;justify-content:center;">
+          <div style="position:relative;width:76px;height:76px;">
+            <svg width="76" height="76" viewBox="0 0 76 76" style="transform:rotate(-90deg) scaleY(-1);display:block;">
+              <circle cx="38" cy="38" r="33" style="fill:none;stroke:rgba(199,171,212,0.25);stroke-width:6;"></circle>
+              <circle cx="38" cy="38" r="33" style="fill:none;stroke:#C7ABD4;stroke-width:6;stroke-linecap:round;stroke-dasharray:70 138;"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;color:#C7ABD4;">⏸</div>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,#61337F,#4B2769);border-top:1px solid rgba(168,85,214,0.6);border-radius:34px 34px 44px 44px;padding:26px 24px 30px;display:flex;flex-direction:column;gap:18px;box-shadow:0 -20px 60px rgba(112,46,145,0.35);">
+          <div style="width:44px;height:5px;border-radius:3px;background:rgba(199,171,212,0.4);margin:0 auto;"></div>
+          <div style="font-size:24px;line-height:1.3;font-weight:900;text-align:center;text-shadow:0 0 14px rgba(168,85,214,0.6);text-wrap:pretty;">הטיימר נעצר!<br>למה זה שידוך מנצח?</div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+            <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:800;">מאפיית הגליל</span>
+            <span style="font-size:20px;">🤝</span>
+            <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:800;">סטודיו נועה</span>
+          </div>
+          <div style="position:relative;">
+            <div style="min-height:132px;border-radius:18px;border:1px solid #A855D6;background:#2F1748;padding:16px 18px 34px;font-size:17px;line-height:1.55;color:#fff;box-shadow:0 0 0 3px rgba(168,85,214,0.2);">שניהם עובדים עם עסקים קטנים בגליל – אפשר לארוז מיתוג + מארזי מאפים לאירועים<span style="display:inline-block;width:2px;height:20px;background:#A855D6;vertical-align:middle;margin-right:2px;animation:flash 1s infinite;"></span></div>
+            <div dir="ltr" style="position:absolute;bottom:10px;left:16px;font-size:13px;font-weight:700;color:#C7ABD4;">75/120</div>
+          </div>
+          <button style="height:64px;border-radius:20px;border:1px solid #A855D6;background:linear-gradient(180deg,#8A3BB0,#702E91);color:#fff;font-size:19px;font-weight:800;font-family:Rubik,sans-serif;box-shadow:0 0 24px rgba(168,85,214,0.55);cursor:pointer;">אישור ושליחה (+2 נקודות) 🚀</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1e Voting -->
+    <div id="1e" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;"><a href="#1e" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1e</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 5 — הצבעה על שידוך של צמד אחר</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);display:flex;flex-direction:column;padding:0 22px 30px;">
+        <img src="assets/logo.png" alt="" style="position:absolute;top:18px;left:20px;height:22px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.75;">
+        <div style="margin-top:64px;font-size:22px;font-weight:900;text-align:center;line-height:1.3;">העריכו את השידוך המוצג על הלוח:</div>
+        <div style="margin-top:22px;background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.28);border-radius:24px;padding:22px 20px;display:flex;flex-direction:column;gap:16px;box-shadow:0 0 0 1px rgba(112,46,145,0.25),0 16px 40px rgba(0,0,0,0.35);">
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;">
+            <div style="flex:1;font-size:20px;font-weight:900;line-height:1.2;">חוות ריח הדבש</div>
+            <div style="width:42px;height:42px;border-radius:50%;background:#702E91;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 18px rgba(168,85,214,0.6);flex-shrink:0;">🤝</div>
+            <div style="flex:1;font-size:20px;font-weight:900;line-height:1.2;">צימרים בכפר בלום</div>
+          </div>
+          <div style="height:1px;background:rgba(199,171,212,0.2);"></div>
+          <div style="font-size:16px;line-height:1.6;color:#C7ABD4;text-wrap:pretty;">"מארז דבש מקומי בכל חדר בצ'ק-אין, עם קוד הנחה לביקור בחווה למחרת בבוקר"</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <button style="height:84px;border-radius:22px;border:none;background:#FCD611;color:#14081C;font-family:Rubik,sans-serif;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 0 30px rgba(252,214,17,0.45),0 10px 24px rgba(0,0,0,0.4);cursor:pointer;"><span style="font-size:28px;">💡</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:22px;font-weight:900;">איזו הברקה!</span><span style="font-size:13px;font-weight:700;opacity:.8;">(+5 נקודות)</span></span></button>
+          <button style="height:84px;border-radius:22px;border:none;background:#00FF87;color:#0B0510;font-family:Rubik,sans-serif;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 0 30px rgba(0,255,135,0.4),0 10px 24px rgba(0,0,0,0.4);cursor:pointer;"><span style="font-size:28px;">👍</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:22px;font-weight:900;">שווה לנסות</span><span style="font-size:13px;font-weight:700;opacity:.8;">(+2 נקודות)</span></span></button>
+          <button style="height:84px;border-radius:22px;border:none;background:#FF0055;color:#fff;font-family:Rubik,sans-serif;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 0 30px rgba(255,0,85,0.4),0 10px 24px rgba(0,0,0,0.4);cursor:pointer;"><span style="font-size:28px;">❌</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:22px;font-weight:900;">לא להמציא!</span><span style="font-size:13px;font-weight:700;opacity:.85;">(-2 נקודות)</span></span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1f Voting — post-vote -->
+    <div id="1f" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;"><a href="#1f" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1f</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 5 — לאחר ההצבעה</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);display:flex;flex-direction:column;padding:0 22px 30px;">
+        <img src="assets/logo.png" alt="" style="position:absolute;top:18px;left:20px;height:22px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.75;">
+        <div style="margin-top:64px;font-size:22px;font-weight:900;text-align:center;line-height:1.3;">העריכו את השידוך המוצג על הלוח:</div>
+        <div style="margin-top:22px;background:linear-gradient(180deg,#532C74,#472465);border:1px solid rgba(199,171,212,0.28);border-radius:24px;padding:22px 20px;display:flex;flex-direction:column;gap:16px;box-shadow:0 0 0 1px rgba(112,46,145,0.25),0 16px 40px rgba(0,0,0,0.35);">
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;text-align:center;">
+            <div style="flex:1;font-size:20px;font-weight:900;line-height:1.2;">חוות ריח הדבש</div>
+            <div style="width:42px;height:42px;border-radius:50%;background:#702E91;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 18px rgba(168,85,214,0.6);flex-shrink:0;">🤝</div>
+            <div style="flex:1;font-size:20px;font-weight:900;line-height:1.2;">צימרים בכפר בלום</div>
+          </div>
+          <div style="height:1px;background:rgba(199,171,212,0.2);"></div>
+          <div style="font-size:16px;line-height:1.6;color:#C7ABD4;text-wrap:pretty;">"מארז דבש מקומי בכל חדר בצ'ק-אין, עם קוד הנחה לביקור בחווה למחרת בבוקר"</div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="align-self:center;margin-bottom:6px;background:rgba(252,214,17,0.1);border:1px solid #FCD611;color:#FCD611;border-radius:999px;padding:12px 26px;font-size:18px;font-weight:900;box-shadow:0 0 24px rgba(252,214,17,0.35);">הצבעתך נקלטה!</div>
+          <div style="height:84px;border-radius:22px;background:#FCD611;color:#14081C;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:0 0 0 3px rgba(252,214,17,0.35);"><span style="font-size:28px;">💡</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:22px;font-weight:900;">איזו הברקה!</span><span style="font-size:13px;font-weight:700;opacity:.8;">(+5 נקודות)</span></span></div>
+          <div style="height:84px;border-radius:22px;background:#00FF87;color:#0B0510;display:flex;align-items:center;justify-content:center;gap:12px;opacity:0.22;filter:saturate(0.4);"><span style="font-size:28px;">👍</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:22px;font-weight:900;">שווה לנסות</span><span style="font-size:13px;font-weight:700;opacity:.8;">(+2 נקודות)</span></span></div>
+          <div style="height:84px;border-radius:22px;background:#FF0055;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;opacity:0.22;filter:saturate(0.4);"><span style="font-size:28px;">❌</span><span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.15;"><span style="font-size:22px;font-weight:900;">לא להמציא!</span><span style="font-size:13px;font-weight:700;opacity:.85;">(-2 נקודות)</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1g Own match -->
+    <div id="1g" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;align-items:center;gap:10px;"><a href="#1g" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1g</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">מסך 6 — השידוך שלכם על הלוח</span></div>
+      <div style="width:390px;height:844px;border-radius:44px;overflow:hidden;position:relative;background:radial-gradient(130% 55% at 50% -8%,#6E3899 0%,#41205F 58%,#391B54 100%);border:1px solid rgba(199,171,212,0.16);box-shadow:0 30px 80px rgba(0,0,0,0.65),0 0 0 1px rgba(112,46,145,0.3);display:flex;flex-direction:column;align-items:center;padding:0 30px 40px;">
+        <img src="assets/logo.png" alt="" style="position:absolute;top:18px;left:20px;height:22px;filter:grayscale(1) invert(1) brightness(1.4);mix-blend-mode:screen;opacity:0.75;">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;width:100%;">
+          <div style="position:relative;width:280px;height:280px;display:flex;align-items:center;justify-content:center;">
+            <div style="position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(112,46,145,0.55) 0%,rgba(112,46,145,0) 70%);"></div>
+            <div style="position:absolute;inset:18px;border-radius:50%;border:2px solid rgba(168,85,214,0.55);animation:pulse 2.6s ease-in-out infinite;"></div>
+            <div style="position:absolute;inset:52px;border-radius:50%;border:1px solid rgba(199,171,212,0.35);animation:pulse 2.6s ease-in-out infinite .6s;"></div>
+            <div style="position:absolute;inset:86px;border-radius:50%;background:linear-gradient(180deg,#8A3BB0,#702E91);box-shadow:0 0 40px rgba(168,85,214,0.7);display:flex;align-items:center;justify-content:center;font-size:56px;">🤝</div>
+            <div style="position:absolute;top:26px;right:44px;color:#FCD611;font-size:26px;text-shadow:0 0 12px #FCD611;animation:flash 1.6s infinite;">✦</div>
+            <div style="position:absolute;bottom:38px;left:30px;color:#FCD611;font-size:18px;text-shadow:0 0 12px #FCD611;animation:flash 1.6s infinite .5s;">✦</div>
+            <div style="position:absolute;top:70px;left:14px;color:#FCD611;font-size:14px;text-shadow:0 0 10px #FCD611;animation:flash 1.6s infinite 1s;">✦</div>
+            <div style="position:absolute;bottom:14px;right:76px;color:#C7ABD4;font-size:12px;animation:flash 1.6s infinite .8s;">✦</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px;text-align:center;margin-bottom:24px;">
+          <div style="font-size:32px;font-weight:900;color:#FCD611;text-shadow:0 0 18px rgba(252,214,17,0.55);">זה השידוך שלכם! 🌟</div>
+          <div style="font-size:18px;line-height:1.6;color:#C7ABD4;text-wrap:pretty;">השופטים והמשתתפים באולם מצביעים כעת על הרעיון שלכם. החזיקו אצבעות!</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+          <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:800;">מאפיית הגליל</span>
+          <span style="font-size:16px;">🤝</span>
+          <span style="background:#4D2A6D;border:1px solid rgba(199,171,212,0.35);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:800;">סטודיו נועה</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Micro-interactions -->
+  <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;flex-direction:column;gap:16px;margin-top:8px;">
+    <div style="font-size:18px;font-weight:900;">מיקרו-אינטראקציות</div>
+    <div style="display:flex;flex-wrap:wrap;gap:32px;">
+
+      <div id="1h" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:10px;"><a href="#1h" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1h</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">זכייה בנקודות — "2+" ירוק מרחף מעל תג הניקוד</span></div>
+        <div style="width:390px;height:150px;border-radius:28px;overflow:hidden;position:relative;background:#41205F;border:1px solid rgba(199,171,212,0.16);display:flex;align-items:center;padding:0 20px;">
+          <div style="width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
+            <div style="display:flex;gap:4px;font-size:22px;"><span>🛟</span><span>🛟</span><span style="opacity:0.22;filter:grayscale(1);">🛟</span></div>
+            <div style="width:60px;height:60px;border-radius:50%;border:5px solid #FCD611;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;" dir="ltr">24</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;position:relative;">
+              <div style="font-size:15px;font-weight:800;">צמד הגולן</div>
+              <div style="font-size:13px;font-weight:800;color:#fff;background:rgba(0,255,135,0.15);border:1px solid #00FF87;border-radius:999px;padding:4px 12px;box-shadow:0 0 16px rgba(0,255,135,0.5);">14 נק'</div>
+              <div dir="ltr" style="position:absolute;left:4px;bottom:26px;font-size:26px;font-weight:900;color:#00FF87;text-shadow:0 0 14px #00FF87;animation:floatUp 1.6s ease-out infinite;">+2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="1i" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:10px;"><a href="#1i" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1i</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">הפסד נקודות — "2-" אדום, התג רועד ומתכהה</span></div>
+        <div style="width:390px;height:150px;border-radius:28px;overflow:hidden;position:relative;background:#41205F;border:1px solid rgba(199,171,212,0.16);display:flex;align-items:center;padding:0 20px;">
+          <div style="width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
+            <div style="display:flex;gap:4px;font-size:22px;"><span>🛟</span><span>🛟</span><span style="opacity:0.22;filter:grayscale(1);">🛟</span></div>
+            <div style="width:60px;height:60px;border-radius:50%;border:5px solid #FCD611;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;" dir="ltr">24</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;position:relative;">
+              <div style="font-size:15px;font-weight:800;">צמד הגולן</div>
+              <div style="font-size:13px;font-weight:800;color:#fff;background:rgba(255,0,85,0.15);border:1px solid #FF0055;border-radius:999px;padding:4px 12px;box-shadow:0 0 16px rgba(255,0,85,0.5);">10 נק'</div>
+              <div dir="ltr" style="position:absolute;left:4px;bottom:26px;font-size:26px;font-weight:900;color:#FF0055;text-shadow:0 0 14px #FF0055;animation:floatUp 1.6s ease-out infinite;">-2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="1j" style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:10px;"><a href="#1j" style="text-decoration:none;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;border:1px solid #C7ABD4;color:#C7ABD4;font-family:Rubik,sans-serif;" dir="ltr">1j</a><span style="font-size:14px;color:#C7ABD4;font-weight:700;">שימוש בחבל הצלה — האייקון מתנפח ודוהה</span></div>
+        <div style="width:390px;height:150px;border-radius:28px;overflow:hidden;position:relative;background:#41205F;border:1px solid rgba(199,171,212,0.16);display:flex;align-items:center;padding:0 20px;">
+          <div style="width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;">
+              <div style="display:flex;gap:4px;font-size:22px;line-height:1;"><span style="filter:drop-shadow(0 0 6px rgba(252,214,17,0.7));">🛟</span><span style="display:inline-block;animation:lifeFade 1.8s ease-out infinite;filter:drop-shadow(0 0 10px #FCD611);">🛟</span><span style="opacity:0.22;filter:grayscale(1);">🛟</span></div>
+              <div style="font-size:11px;font-weight:700;color:#FCD611;">חבלי הצלה</div>
+            </div>
+            <div style="width:60px;height:60px;border-radius:50%;border:5px solid #FCD611;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;" dir="ltr">24</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <div style="font-size:15px;font-weight:800;">צמד הגולן</div>
+              <div style="font-size:13px;font-weight:800;color:#C7ABD4;background:rgba(112,46,145,0.35);border:1px solid rgba(168,85,214,0.6);border-radius:999px;padding:4px 12px;">12 נק'</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  </sc-if>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;timerState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;green&quot;,&quot;yellow&quot;,&quot;red&quot;],&quot;default&quot;:&quot;yellow&quot;,&quot;tsType&quot;:&quot;'green'|'yellow'|'red'&quot;,&quot;section&quot;:&quot;לוח המשחק&quot;},&quot;showAnnotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;תצוגה&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.props.timerState ?? 'yellow';
+    const C = 2 * Math.PI * 33;
+    const map = {
+      green:  { color: '#00FF87', secs: 47, anim: 'none' },
+      yellow: { color: '#FCD611', secs: 24, anim: 'none' },
+      red:    { color: '#FF0055', secs: 7,  anim: 'flash 0.7s infinite' }
+    };
+    const t = map[st] || map.yellow;
+    const frac = t.secs / 60;
+    return {
+      timerColor: t.color,
+      timerSeconds: t.secs,
+      timerAnim: t.anim,
+      timerDash: `${(C * frac).toFixed(1)} ${(C * (1 - frac)).toFixed(1)}`,
+      showAnnotations: this.props.showAnnotations ?? true
+    };
+  }
+}
+</script>
+</body>
+</html>

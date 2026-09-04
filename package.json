@@ -1,0 +1,19 @@
+{
+  "name": "business-matchmaker-game",
+  "version": "1.0.0",
+  "description": "שת\"פ נולד — live event business matchmaking game for הבית לעסקים גליל מזרחי",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/unit.js && node test/smoke.js",
+    "test:browser": "node test/browser.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4"
+  }
+}
