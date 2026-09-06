@@ -112,7 +112,7 @@ uploaded business pool. Every destructive control (end round, end judging, reset
 confirmation in an in-app dialog.
 
 Scoring: skip −1, timeout −2 (running the clock out costs more than deciding), accepted
-match +4 (with a ≤120-char argument), judging adds round(mean of 💡 +5 / 👍 +2 / ❌ −2),
+match +3 (with a ≤120-char argument), judging adds round(mean of 💡 +5 / 👍 +2 / ❌ −2),
 0 if nobody voted. 3 lifelines (🛟) per pair swap one business with no penalty.
 
 **Business uniqueness.** A business is never shown to the same pair twice, two pairs never

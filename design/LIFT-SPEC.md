@@ -79,7 +79,7 @@ game was reset → clear `localStorage` keys `mm.teamId` / `mm.token` and show o
 Player endpoints (all POST JSON, `{ token }` plus fields): `/api/join {teamName}` →
 `{teamId, token}`; `/api/action/reject`; `/api/action/accept-open` (freezes this team's pair
 timer while the argument sheet is open); `/api/action/accept-cancel` (sheet closed without
-sending → timer resumes); `/api/action/accept {argument}` (1–120 chars, +4, new pair);
+sending → timer resumes); `/api/action/accept {argument}` (1–120 chars, +3, new pair);
 `/api/action/lifeline {slot:1|2}` (swap one business, no penalty, timer keeps running);
 `/api/vote {matchId, value:5|2|-2}`.
 
@@ -148,12 +148,12 @@ Interactions to reproduce exactly (see `renderVals()` in the mobile prototype):
   the new pair arrives.
 - Lifeline: the next unspent 🛟 plays `lifeFade .9s ease-out forwards` and becomes spent
   (`opacity:.22; filter:grayscale(1)`); the swap button gets `opacity:.35` and disables at 0.
-- Score change: float `+4`/`−1` above the badge (`floatUp 1.5s`), badge turns green
+- Score change: float `+3`/`−1` above the badge (`floatUp 1.5s`), badge turns green
   (gain) or red + `shake .4s` (loss) for 1.5 s, then back to neutral. Timeout (`lastEvent.type ===
   'timeout'` with a new `at`) shows the −2 float too.
 - Argument sheet: `popIn .35s`, blurred backdrop, paused ring with ⏸ at the top showing the frozen
   dash, textarea `maxlength=120`, counter turns `#FCD611` at ≥110, submit disabled (`opacity:.45`)
-  under 3 characters, label "אישור ושליחה (+4 נקודות) 🚀". Opening → `accept-open`; closing via
+  under 3 characters, label "אישור ושליחה (+3 נקודות) 🚀". Opening → `accept-open`; closing via
   backdrop/handle → `accept-cancel`; submit → `accept`. If the other phone of the same team
   opens/closes the sheet, follow `currentPair.arguing`.
 - Vote buttons: after voting, chosen button keeps full opacity with `0 0 0 3px rgba(rgb,0.45)`

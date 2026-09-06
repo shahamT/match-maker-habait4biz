@@ -128,7 +128,7 @@ const stop = () => {
   await sleep(3800);
   expectErr(await post('/api/host/start', { roundSeconds: 120 }), 'wrong_phase');
 
-  step('reject −1; lifelines; accept-open/cancel keeps remaining; accept +4');
+  step('reject −1; lifelines; accept-open/cancel keeps remaining; accept +3');
   r = await post('/api/action/reject', { token: A.token });
   assert.strictEqual(r.data.team.score, -1); // דילוג
   const keepB = r.data.team.currentPair.businessB.id;
@@ -147,7 +147,7 @@ const stop = () => {
   expectErr(await post('/api/action/accept', { token: A.token, argument: 'x'.repeat(121) }), 'argument_too_long');
   expectErr(await post('/api/action/accept', { token: A.token, argument: '' }), 'empty_argument');
   r = await post('/api/action/accept', { token: A.token, argument: 'שניהם עובדים עם משפחות בגליל' });
-  assert.strictEqual(r.data.team.score, 3); // −1 דילוג + 4 שידוך
+  assert.strictEqual(r.data.team.score, 2); // −1 דילוג + 3 שידוך
   assert.strictEqual(r.data.team.myMatches, 1);
 
   step('pause / resume / add-time');
@@ -198,7 +198,7 @@ const stop = () => {
   assert.strictEqual(sv.judging.match.voteCount, 2);
   assert.strictEqual(sv.judging.match.average, 3.5);
   r = await post('/api/host/next-match');
-  assert.strictEqual(r.data.leaderboard.find((t) => t.id === A.teamId).score, 7); // 3 + ציון שיפוט 4
+  assert.strictEqual(r.data.leaderboard.find((t) => t.id === A.teamId).score, 6); // 2 + ציון שיפוט 4
   assert.strictEqual(r.data.judging.lastScored.delta, 4);
   await post('/api/vote', { token: A.token, matchId: 'm2', value: -2 });
   await post('/api/vote', { token: C.token, matchId: 'm2', value: -2 });
@@ -249,8 +249,8 @@ const stop = () => {
   await post('/api/vote', { token: T2.token, matchId: 'm1', value: 5 });
   r = await post('/api/host/finish'); // early: still on match 1 of 3
   assert.strictEqual(r.data.phase, 'finished');
-  assert.strictEqual(r.data.leaderboard.find((t) => t.id === T1.teamId).score, 4 + 4 + 5);
-  assert.strictEqual(r.data.leaderboard.find((t) => t.id === T2.teamId).score, 4);
+  assert.strictEqual(r.data.leaderboard.find((t) => t.id === T1.teamId).score, 3 + 3 + 5);
+  assert.strictEqual(r.data.leaderboard.find((t) => t.id === T2.teamId).score, 3);
   const csvLate = new TextDecoder('utf-8').decode(new Uint8Array(await (await fetch(BASE + '/api/host/export.csv')).arrayBuffer()));
   const rowsLate = csvLate.trim().split(String.fromCharCode(13, 10)).slice(1);
   assert.strictEqual(rowsLate.length, 3);

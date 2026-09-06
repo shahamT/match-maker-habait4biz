@@ -218,12 +218,12 @@ ok('reject/accept scoring and validation', () => {
   throwsCode(() => game.accept(g, A, '   ', 5000), 'empty_argument');
   throwsCode(() => game.accept(g, A, 'x'.repeat(121), 5000), 'argument_too_long');
   game.accept(g, A, ' שת"פ  מעולה ', 6000);
-  assert.strictEqual(A.score, 3); // −1 דילוג + 4 שידוך
+  assert.strictEqual(A.score, 2); // −1 דילוג + 3 שידוך
   assert.strictEqual(g.matches.length, 1);
   assert.strictEqual(g.matches[0].argument, 'שת"פ מעולה');
   assert.strictEqual(A.currentPair.expiresAt, 66000);
   assert.strictEqual(A.lastEvent.type, 'accept');
-  assert.strictEqual(A.lastEvent.delta, 4);
+  assert.strictEqual(A.lastEvent.delta, 3);
 });
 ok('lifeline replaces one slot, keeps timer, decrements, blocks at 0', () => {
   const g = fresh();
@@ -316,7 +316,7 @@ ok('vote rules, rounding, score application, anonymity, no token leaks', () => {
   assert.strictEqual(pvB.judging.myVote, 5);
   assert.strictEqual(pvB.judging.isMine, false);
   game.nextMatch(g, 8000);
-  assert.strictEqual(A.score, 4 + 4); // mean 3.5 → 4
+  assert.strictEqual(A.score, 3 + 4); // mean 3.5 → 4
   assert.strictEqual(g.matches[0].judgeScore, 4);
   assert.strictEqual(g.judging.lastScored.teamId, A.id);
   assert.deepStrictEqual(A.lastEvent, { type: 'judged', delta: 4, at: 8000, matchId: 'm1' });
@@ -324,10 +324,10 @@ ok('vote rules, rounding, score application, anonymity, no token leaks', () => {
   game.vote(g, A, 'm2', -2);
   game.vote(g, C, 'm2', -2);
   game.nextMatch(g, 9000); // mean -2
-  assert.strictEqual(B.score, 8 - 2); // two accepted matches, then −2
+  assert.strictEqual(B.score, 6 - 2); // two accepted matches, then −2
   game.nextMatch(g, 10000); // no votes → 0
   assert.strictEqual(g.matches[2].judgeScore, 0);
-  assert.strictEqual(B.score, 6);
+  assert.strictEqual(B.score, 4);
   assert.strictEqual(g.judging.currentMatchIndex, null);
   assert.strictEqual(g.judging.votingOpen, false);
   throwsCode(() => game.nextMatch(g, 11000), 'judging_done');
@@ -346,7 +346,7 @@ ok('finish mid-judging scores the open match; reset keeps pool and round length'
   game.beginJudging(g, 6000);
   game.vote(g, B, 'm1', 5);
   game.finish(g, 7000);
-  assert.strictEqual(A.score, 9); // 4 שידוך + 5 שיפוט
+  assert.strictEqual(A.score, 8); // 3 שידוך + 5 שיפוט
   const g2 = game.reset(g);
   assert.strictEqual(g2.phase, 'lobby');
   assert.strictEqual(g2.pool.businesses.length, VALID_IN_FIXTURE);
