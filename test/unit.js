@@ -95,7 +95,7 @@ ok('start: countdown 3.7s, then pair + round timers run; actions blocked during 
   throwsCode(() => game.reject(g, A, 1000), 'countdown');
   throwsCode(() => game.lifeline(g, A, 1, 1000), 'countdown');
   game.reject(g, A, CD);
-  assert.strictEqual(A.score, -2);
+  assert.strictEqual(A.score, -1);
   assert.strictEqual(A.currentPair.expiresAt, CD + 60000);
 });
 ok('pair timeout at exactly 60s after countdown: −2, new pair, timer reset', () => {
@@ -107,7 +107,7 @@ ok('pair timeout at exactly 60s after countdown: −2, new pair, timer reset', (
   assert.strictEqual(A.score, -2);
   assert.strictEqual(A.currentPair.expiresAt, CD + 120000);
   assert.strictEqual(A.lastEvent.type, 'timeout');
-  assert.strictEqual(A.seenPairs.length, 2);
+  assert.strictEqual(A.seenBusinesses.length, 4); // two pairs, four distinct businesses
 });
 ok('pause freezes round + pair timers, resume restores exactly', () => {
   const g = fresh();
@@ -214,16 +214,16 @@ ok('reject/accept scoring and validation', () => {
   assert.strictEqual(A.teamName, 'א וב');
   game.start(g, 300, 0);
   game.reject(g, A, 4000);
-  assert.strictEqual(A.score, -2);
+  assert.strictEqual(A.score, -1);
   throwsCode(() => game.accept(g, A, '   ', 5000), 'empty_argument');
   throwsCode(() => game.accept(g, A, 'x'.repeat(121), 5000), 'argument_too_long');
   game.accept(g, A, ' שת"פ  מעולה ', 6000);
-  assert.strictEqual(A.score, 0);
+  assert.strictEqual(A.score, 3); // −1 דילוג + 4 שידוך
   assert.strictEqual(g.matches.length, 1);
   assert.strictEqual(g.matches[0].argument, 'שת"פ מעולה');
   assert.strictEqual(A.currentPair.expiresAt, 66000);
   assert.strictEqual(A.lastEvent.type, 'accept');
-  assert.strictEqual(A.lastEvent.delta, 2);
+  assert.strictEqual(A.lastEvent.delta, 4);
 });
 ok('lifeline replaces one slot, keeps timer, decrements, blocks at 0', () => {
   const g = fresh();
@@ -243,13 +243,13 @@ ok('lifeline replaces one slot, keeps timer, decrements, blocks at 0', () => {
   throwsCode(() => game.lifeline(g, game.join(g, T('y'), 5000), 3, 5000), 'bad_slot');
   assert.strictEqual(A.score, 0);
 });
-ok('pair exhaustion resets seenPairs; tiny pools never throw', () => {
+ok('a tiny pool degrades to repeats instead of throwing', () => {
   const three = [{ name: '1' }, { name: '2' }, { name: '3' }];
   const g = fresh(three);
   const A = game.join(g, T('א'), 0);
   game.start(g, 300, 0);
   for (let i = 0; i < 10; i++) game.reject(g, A, 4000 + i);
-  assert.ok(A.seenPairs.length <= 3);
+  assert.strictEqual(A.seenBusinesses.length, 3); // the whole pool, then repeats
   const two = fresh([{ name: '1' }, { name: '2' }]);
   const B = game.join(two, T('ב'), 0);
   game.start(two, 300, 0);
@@ -316,7 +316,7 @@ ok('vote rules, rounding, score application, anonymity, no token leaks', () => {
   assert.strictEqual(pvB.judging.myVote, 5);
   assert.strictEqual(pvB.judging.isMine, false);
   game.nextMatch(g, 8000);
-  assert.strictEqual(A.score, 2 + 4); // mean 3.5 → 4
+  assert.strictEqual(A.score, 4 + 4); // mean 3.5 → 4
   assert.strictEqual(g.matches[0].judgeScore, 4);
   assert.strictEqual(g.judging.lastScored.teamId, A.id);
   assert.deepStrictEqual(A.lastEvent, { type: 'judged', delta: 4, at: 8000, matchId: 'm1' });
@@ -324,10 +324,10 @@ ok('vote rules, rounding, score application, anonymity, no token leaks', () => {
   game.vote(g, A, 'm2', -2);
   game.vote(g, C, 'm2', -2);
   game.nextMatch(g, 9000); // mean -2
-  assert.strictEqual(B.score, 4 - 2);
+  assert.strictEqual(B.score, 8 - 2); // two accepted matches, then −2
   game.nextMatch(g, 10000); // no votes → 0
   assert.strictEqual(g.matches[2].judgeScore, 0);
-  assert.strictEqual(B.score, 2);
+  assert.strictEqual(B.score, 6);
   assert.strictEqual(g.judging.currentMatchIndex, null);
   assert.strictEqual(g.judging.votingOpen, false);
   throwsCode(() => game.nextMatch(g, 11000), 'judging_done');
@@ -346,7 +346,7 @@ ok('finish mid-judging scores the open match; reset keeps pool and round length'
   game.beginJudging(g, 6000);
   game.vote(g, B, 'm1', 5);
   game.finish(g, 7000);
-  assert.strictEqual(A.score, 7);
+  assert.strictEqual(A.score, 9); // 4 שידוך + 5 שיפוט
   const g2 = game.reset(g);
   assert.strictEqual(g2.phase, 'lobby');
   assert.strictEqual(g2.pool.businesses.length, VALID_IN_FIXTURE);
@@ -381,10 +381,127 @@ ok('views expose the fields the projection needs', () => {
   assert.strictEqual(sv.round, 1);
   assert.strictEqual(sv.lobbyOpen, true);
   assert.strictEqual(sv.pool.count, VALID_IN_FIXTURE);
-  assert.deepStrictEqual(sv.leaderboard[0].lastEvent, { type: 'reject', delta: -2, at: 5000 });
+  assert.deepStrictEqual(sv.leaderboard[0].lastEvent, { type: 'reject', delta: -1, at: 5000 });
   const pv = game.viewFor(g, 'player', { token: A.token, links: { playerUrl: 'u', exportUrl: 'e', playerQr: 'x' } }, 6000);
   assert.deepStrictEqual(pv.links, { exportUrl: 'e' });
   assert.strictEqual(pv.countdownEndsAt, CD);
+});
+
+console.log('business uniqueness');
+const bigPool = Array.from({ length: 40 }, (_, i) => ({ name: 'v' + (i + 1), description: 'd' + (i + 1) }));
+
+ok('a team never sees the same business twice while the pool holds out', () => {
+  const g = fresh(bigPool);
+  const A = game.join(g, T('א'), 0);
+  game.start(g, 600, 0);
+  const seen = [];
+  for (let i = 0; i < 15; i++) {
+    seen.push(A.currentPair.businessA.id, A.currentPair.businessB.id);
+    game.reject(g, A, CD + i);
+  }
+  seen.push(A.currentPair.businessA.id, A.currentPair.businessB.id);
+  assert.strictEqual(new Set(seen).size, seen.length, 'a business was shown twice: ' + seen.join(','));
+  assert.strictEqual(A.currentPair.businessA.id === A.currentPair.businessB.id, false);
+});
+
+ok('lifeline swaps in a business the team has never seen', () => {
+  const g = fresh(bigPool);
+  const A = game.join(g, T('א'), 0);
+  game.start(g, 600, 0);
+  const before = A.seenBusinesses.slice();
+  game.lifeline(g, A, 1, CD);
+  assert.ok(!before.includes(A.currentPair.businessA.id), 'lifeline reused a seen business');
+  assert.strictEqual(A.seenBusinesses.length, before.length + 1);
+});
+
+ok('an accepted match locks both businesses out of every other team', () => {
+  const g = fresh(bigPool);
+  const A = game.join(g, T('א'), 0);
+  const B = game.join(g, T('ב'), 0);
+  const C = game.join(g, T('ג'), 0);
+  game.start(g, 600, 0);
+  const locked = new Set();
+  for (let i = 0; i < 6; i++) {
+    locked.add(A.currentPair.businessA.id);
+    locked.add(A.currentPair.businessB.id);
+    game.accept(g, A, 'שידוך ' + i, CD + i);
+  }
+  assert.deepStrictEqual(new Set(g.matchedBusinesses), locked);
+  for (const t of [B, C]) {
+    for (const id of [t.currentPair.businessA.id, t.currentPair.businessB.id]) {
+      assert.ok(!locked.has(id), 'a matched business surfaced for another team');
+    }
+  }
+  // …and it stays locked for every future draw too
+  for (let i = 0; i < 8; i++) {
+    game.reject(g, B, CD + 100 + i);
+    for (const id of [B.currentPair.businessA.id, B.currentPair.businessB.id]) {
+      assert.ok(!locked.has(id), 'a matched business was drawn later');
+    }
+  }
+});
+
+ok('two teams never hold the same business at the same time', () => {
+  const g = fresh(bigPool);
+  const teams = ['א', 'ב', 'ג', 'ד'].map((n) => game.join(g, T(n), 0));
+  game.start(g, 600, 0);
+  for (let i = 0; i < 4; i++) {
+    const held = [];
+    for (const t of teams) held.push(t.currentPair.businessA.id, t.currentPair.businessB.id);
+    assert.strictEqual(new Set(held).size, held.length, 'two teams share a business');
+    for (const t of teams) game.reject(g, t, CD + i);
+  }
+});
+
+ok('reset clears the locked businesses', () => {
+  const g = fresh(bigPool);
+  const A = game.join(g, T('א'), 0);
+  game.start(g, 600, 0);
+  game.accept(g, A, 'שידוך', CD);
+  assert.strictEqual(g.matchedBusinesses.length, 2);
+  assert.deepStrictEqual(game.reset(g).matchedBusinesses, []);
+});
+
+console.log('judging order');
+ok('matches are judged one per team, round-robin, skipping teams that ran out', () => {
+  const g = fresh(bigPool);
+  const A = game.join(g, T('א'), 0);
+  const B = game.join(g, T('ב'), 0);
+  const C = game.join(g, T('ג'), 0);
+  game.start(g, 600, 0);
+  // A: 3 matches, B: 1, C: 2 — submitted in bursts, worst case for the ordering
+  for (let i = 0; i < 3; i++) game.accept(g, A, 'a' + i, CD + i);
+  game.accept(g, B, 'b0', CD + 10);
+  for (let i = 0; i < 2; i++) game.accept(g, C, 'c' + i, CD + 20 + i);
+  game.beginJudging(g, CD + 30);
+  const order = [];
+  for (let i = 0; i < 6; i++) {
+    order.push(game.currentMatch(g).teamId);
+    game.nextMatch(g, CD + 40 + i);
+  }
+  assert.deepStrictEqual(order, [A.id, B.id, C.id, A.id, C.id, A.id]);
+  assert.strictEqual(g.judging.currentMatchIndex, null);
+  assert.strictEqual(new Set(g.judging.order).size, 6);
+  assert.ok(g.matches.every((m) => m.judged), 'every match should have been judged');
+});
+
+ok('judging totals and index follow the round-robin order', () => {
+  const g = fresh(bigPool);
+  const A = game.join(g, T('א'), 0);
+  const B = game.join(g, T('ב'), 0);
+  game.start(g, 600, 0);
+  game.accept(g, A, 'a0', CD);
+  game.accept(g, A, 'a1', CD + 1);
+  game.accept(g, B, 'b0', CD + 2);
+  game.beginJudging(g, CD + 5);
+  const sv = game.viewFor(g, 'screen', {}, CD + 6);
+  assert.strictEqual(sv.judging.total, 3);
+  assert.strictEqual(sv.judging.index, 0);
+  assert.strictEqual(game.currentMatch(g).teamId, A.id);
+  game.nextMatch(g, CD + 7);
+  assert.strictEqual(game.currentMatch(g).teamId, B.id); // B's only match comes second
+  game.nextMatch(g, CD + 8);
+  assert.strictEqual(game.currentMatch(g).teamId, A.id);
 });
 
 console.log(`\n${passed} passed${process.exitCode ? ', FAILURES above' : ''}`);

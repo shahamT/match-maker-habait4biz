@@ -338,14 +338,14 @@ function cleanup() {
   check('submit enabled with ≥3 chars', await player.run(`document.querySelector('#btn-submit-argument').disabled === false`));
   check('no pair timeout so far (test ran fast enough)', Date.now() - startedAt < 55000);
   await player.run(`document.querySelector('#argument-form').requestSubmit(); true`);
-  check('score is 2 after accept', await player.waitFor(`${textOf('[data-bind="score"]')} === '2'`));
-  check('score float shows +2', await player.waitFor(`${textOf('[data-bind="score-float"]')} === '+2' && ${visible('[data-bind="score-float"]')}`, 3000));
+  check('score is 4 after accept', await player.waitFor(`${textOf('[data-bind="score"]')} === '4'`));
+  check('score float shows +4', await player.waitFor(`${textOf('[data-bind="score-float"]')} === '+4' && ${visible('[data-bind="score-float"]')}`, 3000));
   check('argument modal closed after submit', await player.waitFor(notVisible('[data-modal="argument"]')));
   await player.shot('07-player-after-accept');
   await player.click('#btn-no');
-  check('score is 0 after reject', await player.waitFor(`${textOf('[data-bind="score"]')} === '0'`));
-  check('score float shows −2', await player.waitFor(`['−2', '-2'].includes(${textOf('[data-bind="score-float"]')}) && ${visible('[data-bind="score-float"]')}`, 3000));
-  check('projection row for the team shows delta and score', await screen.waitFor(`(() => { const row = [...document.querySelectorAll('[data-board] [data-team]')].find(r => ((r.querySelector('.row-name') || {}).textContent || '').includes(${JSON.stringify(TEAM_A)})); if (!row) return false; const d = ((row.querySelector('.row-delta') || {}).textContent || '').trim(); const s = ((row.querySelector('.row-score') || {}).textContent || '').trim(); return /[+\\-−]\\d/.test(d) && s === '0'; })()`, 4000));
+  check('score is 3 after reject', await player.waitFor(`${textOf('[data-bind="score"]')} === '3'`));
+  check('score float shows −1', await player.waitFor(`['−1', '-1'].includes(${textOf('[data-bind="score-float"]')}) && ${visible('[data-bind="score-float"]')}`, 3000));
+  check('projection row for the team shows delta and score', await screen.waitFor(`(() => { const row = [...document.querySelectorAll('[data-board] [data-team]')].find(r => ((r.querySelector('.row-name') || {}).textContent || '').includes(${JSON.stringify(TEAM_A)})); if (!row) return false; const d = ((row.querySelector('.row-delta') || {}).textContent || '').trim(); const s = ((row.querySelector('.row-score') || {}).textContent || '').trim(); return /[+\\-−]\\d/.test(d) && s === '3'; })()`, 4000));
   await player.shot('08-player-after-reject');
   await screen.shot('08-screen-live-delta');
 
@@ -367,7 +367,7 @@ function cleanup() {
   // ---------------------------------------------------------------------------
   console.log('reconnect');
   await player.goto(BASE + '/');
-  check('reload → straight back to board with same score (no onboarding)', await player.waitFor(`${screenIs('board')} && ${textOf('[data-bind="score"]')} === '0'`));
+  check('reload → straight back to board with same score (no onboarding)', await player.waitFor(`${screenIs('board')} && ${textOf('[data-bind="score"]')} === '3'`));
   check('lifelines preserved after reload (one spent)', await player.waitFor(`document.querySelectorAll('[data-bind="lifelines"] > span').length === 3 && ${spentCount} === 1`));
   check('team name preserved after reload', await player.run(`${textOf('[data-bind="team-name"]')} === ${JSON.stringify(TEAM_A)}`));
   await player.shot('10-player-reloaded');
@@ -412,7 +412,7 @@ function cleanup() {
   await screen.shot('13-screen-judging-voted');
 
   await screen.click('#btn-next');
-  check('player score is 5 after scoring', await player.waitFor(`${textOf('[data-bind="score"]')} === '5'`));
+  check('player score is 8 after scoring', await player.waitFor(`${textOf('[data-bind="score"]')} === '8'`));
   check('player sees vote screen for match 2', await player.waitFor(screenIs('vote')));
   check('projection judging index 2/2', await screen.waitFor(`${textOf('[data-bind="judge-index"]')}.replace(/\\s/g, '') === '2/2'`));
   check('vote screen shows argument of match 2', await player.waitFor(`${textOf('[data-bind="other-arg"]')}.includes(${JSON.stringify(ARG_B)})`));
@@ -432,10 +432,10 @@ function cleanup() {
   console.log('podium');
   await screen.click('#btn-next');
   check('player summary screen', await player.waitFor(screenIs('summary')));
-  check('player final score 5', await player.waitFor(`${textOf('[data-bind="final-score"]')} === '5'`));
+  check('player final score 8', await player.waitFor(`${textOf('[data-bind="final-score"]')} === '8'`));
   check('projection podium', await screen.waitFor(screenIs('podium')));
   check('podium p1 is team A', await screen.waitFor(`${textOf('[data-bind="p1-name"]')} === ${JSON.stringify(TEAM_A)}`));
-  check('podium p1 score 5', await screen.waitFor(`${textOf('[data-bind="p1-score"]')} === '5'`));
+  check('podium p1 score 8', await screen.waitFor(`${textOf('[data-bind="p1-score"]')} === '8'`));
   await sleep(1500); // let the staggered fadeIn finish before the screenshot
   await player.shot('16-player-summary');
   await screen.shot('16-screen-podium');

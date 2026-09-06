@@ -111,9 +111,20 @@ bidi/control characters are stripped. At least two valid entries are required.
 uploaded business pool. Every destructive control (end round, end judging, reset) asks for
 confirmation in an in-app dialog.
 
-Scoring: reject −2, timeout −2, accept +2 (with a ≤120-char argument), judging adds
-round(mean of 💡 +5 / 👍 +2 / ❌ −2), 0 if nobody voted. 3 lifelines (🛟) per pair swap one
-business with no penalty.
+Scoring: skip −1, timeout −2 (running the clock out costs more than deciding), accepted
+match +4 (with a ≤120-char argument), judging adds round(mean of 💡 +5 / 👍 +2 / ❌ −2),
+0 if nobody voted. 3 lifelines (🛟) per pair swap one business with no penalty.
+
+**Business uniqueness.** A business is never shown to the same pair twice, two pairs never
+hold the same business at the same moment, and once a business is part of an accepted match
+it is locked out of everybody’s game for the rest of the round. Draws fall back to looser
+rules only when the pool runs dry mid-round — a repeat beats a dead screen — so size the pool
+generously: a fast pair burns two businesses a minute, so budget roughly
+`2 × pairs × round-minutes` businesses to keep every draw unique.
+
+**Judging order.** Matches are judged round-robin — one from each pair in turn, then
+everyone’s second, and so on — so no pair sits through another’s whole backlog. Pairs that
+ran out of matches are skipped.
 
 ## API
 

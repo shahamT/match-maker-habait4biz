@@ -413,7 +413,7 @@
       setText(els.argA, cp.businessA.name);
       setText(els.argB, cp.businessB.name);
     }
-    // issuedAt is part of the key: a re-issued identical pair (seenPairs exhausted) must still swap in.
+    // issuedAt is part of the key: a re-issued identical pair (pool exhausted) must still swap in.
     const key = cp ? `${cp.businessA.id}:${cp.businessB.id}:${cp.issuedAt == null ? '' : cp.issuedAt}` : null;
     if (key === state.pairKey) return;
     const prev = state.lastPair;

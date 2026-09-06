@@ -17,9 +17,9 @@ const LIFELINES_PER_TEAM = 3;
 const MAX_ARGUMENT_CHARS = 120;
 const MAX_NAME_CHARS = 40;
 const VOTE_VALUES = [5, 2, -2];
-const REJECT_DELTA = -2;
-const TIMEOUT_DELTA = -2;
-const ACCEPT_DELTA = 2;
+const REJECT_DELTA = -1;              // דילוג מודע על זוג עסקים
+const TIMEOUT_DELTA = -2;             // נגמר הזמן בלי החלטה — יקר יותר מדילוג
+const ACCEPT_DELTA = 4;               // שידוך שנשלח לשיפוט
 const MIN_ROUND_SECONDS = 30;
 const MAX_ROUND_SECONDS = 4 * 60 * 60;
 const DEFAULT_ROUND_SECONDS = 900;
@@ -50,7 +50,9 @@ function createGame(prev) {
     pool: prev ? prev.pool : { businesses: [], source: 'default', fileName: null },
     teams: {},
     matches: [],
-    judging: { currentMatchIndex: null, votingOpen: false, lastScored: null },
+    // Businesses locked by an accepted match: they never appear in any team's game again.
+    matchedBusinesses: [],
+    judging: { currentMatchIndex: null, votingOpen: false, lastScored: null, order: [] },
     counters: { team: 0, match: 0 },
     createdAt: Date.now(),
     finishedAt: null,
@@ -144,7 +146,42 @@ function teamByToken(game, token) {
 
 function currentMatch(game) {
   const i = game.judging.currentMatchIndex;
-  return i === null || i === undefined ? null : game.matches[i] || null;
+  if (i === null || i === undefined) return null;
+  const order = game.judging.order;
+  if (order && order.length) {
+    const id = order[i];
+    return game.matches.find((m) => m.id === id) || null;
+  }
+  return game.matches[i] || null;
+}
+
+/** How many matches the judging phase will walk through. */
+function judgingTotal(game) {
+  const order = game.judging.order;
+  return order && order.length ? order.length : game.matches.length;
+}
+
+/**
+ * Judging order: one match from every team in turn, then everyone's second, and
+ * so on. Teams that ran out of matches are simply skipped, so no team has two
+ * matches judged back to back while another is still waiting for its first.
+ */
+function buildJudgingOrder(game) {
+  const byTeam = new Map();
+  for (const t of teamList(game).sort((a, b) => a.joinedAt - b.joinedAt || (a.id < b.id ? -1 : 1))) {
+    byTeam.set(t.id, []);
+  }
+  for (const m of game.matches) {
+    if (!byTeam.has(m.teamId)) byTeam.set(m.teamId, []);
+    byTeam.get(m.teamId).push(m.id);
+  }
+  const lists = Array.from(byTeam.values()).filter((l) => l.length);
+  const rounds = lists.reduce((max, l) => Math.max(max, l.length), 0);
+  const order = [];
+  for (let r = 0; r < rounds; r++) {
+    for (const l of lists) if (l[r]) order.push(l[r]);
+  }
+  return order;
 }
 
 function teamList(game) {
@@ -159,47 +196,84 @@ function leaderboard(game) {
 
 // ---- Pairing ----------------------------------------------------------------
 
-function pairKey(a, b) {
-  return a < b ? `${a}:${b}` : `${b}:${a}`;
-}
-
 function randomOf(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function drawPair(game, team) {
-  const pool = game.pool.businesses;
-  const n = pool.length;
-  if (n < 2) throw new GameError('pool_too_small', 'נדרשים לפחות שני עסקים במאגר');
-  const total = (n * (n - 1)) / 2;
-  if (team.seenPairs.length >= total) team.seenPairs = []; // exhausted → start over
-  const seen = new Set(team.seenPairs);
-
-  for (let i = 0; i < 40; i++) {
-    const a = randomOf(pool);
-    const b = randomOf(pool);
-    if (a.id === b.id) continue;
-    if (seen.has(pairKey(a.id, b.id))) continue;
-    return [a, b];
+/** Every business currently on some *other* team's screen. */
+function shownElsewhere(game, team) {
+  const busy = new Set();
+  for (const t of teamList(game)) {
+    if (t.id === team.id || !t.currentPair) continue;
+    busy.add(t.currentPair.businessA.id);
+    busy.add(t.currentPair.businessB.id);
   }
-  // Random draws kept hitting seen pairs → enumerate the unseen ones.
-  const candidates = [];
-  for (let i = 0; i < n; i++) {
-    for (let j = i + 1; j < n; j++) {
-      if (!seen.has(pairKey(pool[i].id, pool[j].id))) candidates.push([pool[i], pool[j]]);
+  return busy;
+}
+
+/**
+ * Businesses this team may still be shown, in tiers from strictest to loosest.
+ * Tier 1 is the rule as asked for: never shown to this team, never part of an
+ * accepted match, and not on another team's screen right now (so two teams can
+ * never race for the same business). The looser tiers only come into play when
+ * the pool runs dry mid-round — better a repeat than a dead screen.
+ */
+function candidateTiers(game, team, excludeIds) {
+  const ex = new Set(excludeIds || []);
+  const seen = new Set(team.seenBusinesses);
+  const matched = new Set(game.matchedBusinesses);
+  const busy = shownElsewhere(game, team);
+  const free = game.pool.businesses.filter((b) => !ex.has(b.id));
+  const unmatched = free.filter((b) => !matched.has(b.id));
+  const unseen = unmatched.filter((b) => !seen.has(b.id));
+  return [unseen.filter((b) => !busy.has(b.id)), unseen, unmatched, free];
+}
+
+function pickCandidate(game, team, excludeIds) {
+  for (const tier of candidateTiers(game, team, excludeIds)) {
+    if (tier.length) return randomOf(tier);
+  }
+  return null;
+}
+
+/** A business shown to a team is burned for that team for the rest of the game. */
+function markSeen(team, ...ids) {
+  for (const id of ids) if (!team.seenBusinesses.includes(id)) team.seenBusinesses.push(id);
+}
+
+function drawPair(game, team) {
+  if (game.pool.businesses.length < 2) throw new GameError('pool_too_small', 'נדרשים לפחות שני עסקים במאגר');
+  const a = pickCandidate(game, team, []);
+  const b = pickCandidate(game, team, [a.id]);
+  return Math.random() < 0.5 ? [a, b] : [b, a];
+}
+
+/**
+ * Lock the businesses of an accepted match. If another team happens to be
+ * holding one (only reachable through the loosened tiers above), swap that side
+ * out for free — no penalty, no lifeline, timer untouched.
+ */
+function lockMatched(game, ids, exceptTeamId) {
+  for (const id of ids) if (!game.matchedBusinesses.includes(id)) game.matchedBusinesses.push(id);
+  const locked = new Set(game.matchedBusinesses);
+  for (const t of teamList(game)) {
+    if (t.id === exceptTeamId || !t.currentPair) continue;
+    for (const key of ['businessA', 'businessB']) {
+      const cp = t.currentPair;
+      if (!locked.has(cp[key].id)) continue;
+      const other = key === 'businessA' ? cp.businessB : cp.businessA;
+      const next = pickCandidate(game, t, [other.id, cp[key].id]);
+      if (next) {
+        cp[key] = next;
+        markSeen(t, next.id);
+      }
     }
   }
-  if (!candidates.length) {
-    team.seenPairs = [];
-    return drawPair(game, team);
-  }
-  const [a, b] = randomOf(candidates);
-  return Math.random() < 0.5 ? [a, b] : [b, a];
 }
 
 function assignPair(game, team, now) {
   const [a, b] = drawPair(game, team);
-  team.seenPairs.push(pairKey(a.id, b.id));
+  markSeen(team, a.id, b.id);
   const paused = game.phase === 'paused';
   // During the 3-2-1 countdown the pair timer only starts when the countdown ends.
   const base = game.countdownEndsAt && game.countdownEndsAt > now ? game.countdownEndsAt : now;
@@ -253,7 +327,7 @@ function join(game, { player1, player2, teamName } = {}, now) {
     score: 0,
     lifelines: LIFELINES_PER_TEAM,
     currentPair: null,
-    seenPairs: [],
+    seenBusinesses: [],
     connected: false,
     joinedAt: now,
     lastEvent: null,
@@ -326,6 +400,7 @@ function accept(game, team, argument, now) {
     judgeScore: null,
     createdAt: now,
   });
+  lockMatched(game, [cp.businessA.id, cp.businessB.id], team.id);
   assignPair(game, team, now);
 }
 
@@ -340,18 +415,11 @@ function lifeline(game, team, slot, now) {
   const replaceKey = s === 1 ? 'businessA' : 'businessB';
   const keep = cp[keepKey];
   const current = cp[replaceKey];
-  const seen = new Set(team.seenPairs);
-  const pool = game.pool.businesses;
 
-  let candidates = pool.filter(
-    (b) => b.id !== keep.id && b.id !== current.id && !seen.has(pairKey(keep.id, b.id))
-  );
-  if (!candidates.length) candidates = pool.filter((b) => b.id !== keep.id && b.id !== current.id);
-  if (!candidates.length) throw new GameError('no_candidates', 'אין עסק חלופי זמין במאגר');
-
-  const next = randomOf(candidates);
+  const next = pickCandidate(game, team, [keep.id, current.id]);
+  if (!next) throw new GameError('no_candidates', 'אין עסק חלופי זמין במאגר');
   cp[replaceKey] = next;
-  team.seenPairs.push(pairKey(keep.id, next.id));
+  markSeen(team, next.id);
   team.lifelines -= 1;
   team.lastEvent = { type: 'lifeline', delta: 0, at: now, slot: s };
 }
@@ -520,6 +588,7 @@ function beginJudging(game, now) {
     return;
   }
   game.phase = 'judging';
+  game.judging.order = buildJudgingOrder(game);
   game.judging.currentMatchIndex = 0;
   game.judging.votingOpen = true;
   game.judging.lastScored = null;
@@ -547,7 +616,7 @@ function nextMatch(game, now) {
   if (game.judging.currentMatchIndex === null) throw new GameError('judging_done', 'כל השידוכים כבר נשפטו');
   scoreCurrentMatch(game, now);
   const next = game.judging.currentMatchIndex + 1;
-  if (next >= game.matches.length) {
+  if (next >= judgingTotal(game)) {
     game.judging.currentMatchIndex = null;
     game.judging.votingOpen = false;
   } else {
@@ -612,7 +681,7 @@ function matchStats(m) {
 
 function judgingView(game, { forTeam = null, includeSubmitter = false } = {}) {
   const j = game.judging;
-  const total = game.matches.length;
+  const total = judgingTotal(game);
   const view = {
     index: j.currentMatchIndex,
     total,
